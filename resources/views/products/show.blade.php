@@ -27,6 +27,9 @@
         </div>
     @endif
 
+    {{-- Back to the full product list --}}
+    <a href="{{ route('products.index') }}" class="back-link">&larr; All products</a>
+
     <section class="split" style="display: grid; grid-template-columns: 1.55fr 1fr; gap: 20px; align-items: start;">
         {{-- Left: gallery --}}
         <div class="visual" style="position: relative; aspect-ratio: auto; height: min(78vh, 760px);">

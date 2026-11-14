@@ -28,6 +28,15 @@ class ShopSearchTest extends TestCase
         $this->get('/products')->assertOk()->assertSee('Search products...');
     }
 
+    public function test_product_page_links_back_to_all_products(): void
+    {
+        $product = Product::first();
+
+        $this->get(route('products.show', $product))->assertOk()
+            ->assertSee('All products')
+            ->assertSee('href="' . route('products.index') . '" class="back-link"', false);
+    }
+
     public function test_search_matches_product_names(): void
     {
         $this->get('/products?q=charcoal')->assertOk()

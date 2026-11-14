@@ -444,6 +444,12 @@
         .shop-search { width: 280px; max-width: 100%; height: 38px; margin: 0; background: var(--surface); border: 1px solid var(--line); }
         .shop-search:focus-within { border-color: var(--blue); }
 
+        /* "← All products" on the product page */
+        .back-link { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; margin-bottom: 14px;
+                     border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink);
+                     font-size: 13px; text-decoration: none; }
+        .back-link:hover { border-color: var(--navy); }
+
         /* ===== Ratings & reviews ===== */
         /* Star rating component (components/stars.blade.php): grey stars with gold stars on top, cut to the rating width */
         .stars { position: relative; display: inline-block; line-height: 1; letter-spacing: 1px; white-space: nowrap; vertical-align: middle; }
