@@ -525,7 +525,8 @@
             .nav-links { display: none !important; }
             .nav-account { display: none; }
             .menu-btn { display: inline-flex; }
-            .promo { display: none; }
+            /* Quiz card: below the "Shop now" bar on phones instead of floating over the photo */
+            .promo { position: relative; right: auto; top: auto; order: 1; width: auto; margin: 16px 16px 0; }
             .admin { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } /* header row stays compact, content takes the rest */
             .sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
             /* Phones: only the logo + ☰ until the menu is opened */

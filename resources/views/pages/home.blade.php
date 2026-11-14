@@ -20,17 +20,16 @@
                  alt="The NAVIR range: serum, toner, body wash, sunscreen, beard oil, shaving foam and deodorant in a water splash">
         </div>
 
-        @if ($featured)
-            {{-- floating product card --}}
-            <a href="{{ route('products.show', $featured) }}" class="promo">
-                <div class="eyebrow">( featured )</div>
-                <div class="card-title" style="margin-top: 4px;">{{ $featured->name }}</div>
-                <div style="display: flex; justify-content: space-between; align-items: end; margin-top: 18px;">
-                    <div class="display display-md">Rp {{ number_format($featured->price) }}</div>
-                    <span class="arrow">&#8599;</span>
-                </div>
-            </a>
-        @endif
+        {{-- Floating card: invites visitors to the "Find my routine" skin quiz --}}
+        <a href="{{ route('routine.show') }}" class="promo">
+            <div class="eyebrow">( find my routine )</div>
+            <div class="card-title" style="margin-top: 4px;">Not sure where to start?</div>
+            <p class="muted" style="margin: 6px 0 0; font-size: 13px;">4 questions, 1 minute. Get a 3-step routine for your skin.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
+                <span style="font-size: 14px; font-weight: 600;">Take the quiz</span>
+                <span class="arrow" aria-hidden="true">&rarr;</span>
+            </div>
+        </a>
 
         <h1 class="hero-title">Simple habit. Own your face.</h1>
 

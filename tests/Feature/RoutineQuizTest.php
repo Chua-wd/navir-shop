@@ -42,6 +42,14 @@ class RoutineQuizTest extends TestCase
         $this->get('/products')->assertSee('href="' . route('routine.show') . '"', false)->assertSee('Find my routine');
     }
 
+    public function test_home_hero_card_invites_to_the_quiz_instead_of_a_featured_product(): void
+    {
+        $this->get('/')->assertOk()
+            ->assertSee('href="' . route('routine.show') . '" class="promo"', false)
+            ->assertSee('Not sure where to start?')
+            ->assertDontSee('( featured )');
+    }
+
     public function test_oily_skin_with_breakouts_gets_the_oil_control_routine(): void
     {
         $this->quiz(['skin' => 'oily', 'concern' => 'breakouts', 'sun' => 'high', 'hair' => 'shave'])
