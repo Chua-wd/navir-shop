@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\MyOrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -34,6 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/{checkout}/payment', [CheckoutController::class, 'payment'])->name('checkout.payment');
     Route::post('/checkout/{checkout}/payment', [CheckoutController::class, 'sendPayment'])->name('checkout.payment.send');
     Route::get('/checkout/{checkout}/done', [CheckoutController::class, 'done'])->name('checkout.done');
+
+    // My orders: the customer's own order history
+    Route::get('/orders', [MyOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{checkout}', [MyOrderController::class, 'show'])->name('orders.show');
 });
 
 // ===== Dashboard (logged-in users only) =====

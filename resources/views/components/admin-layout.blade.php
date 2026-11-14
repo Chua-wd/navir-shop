@@ -76,6 +76,7 @@
                     <x-icon name="user" /> Profile
                 </a>
                 @unless ($user->isAdmin())
+                    <a href="{{ route('orders.index') }}"><x-icon name="box" /> My orders</a>
                     <a href="{{ route('products.index') }}"><x-icon name="bag" /> Shop</a>
                     <a href="{{ route('cart.index') }}"><x-icon name="bag" /> Cart <span class="badge">{{ \App\Support\Cart::count() }}</span></a>
                 @endunless

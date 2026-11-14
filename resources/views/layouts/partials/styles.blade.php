@@ -421,6 +421,15 @@
         .payment-message { margin: 0; padding: 14px 16px; border-radius: 10px; background: var(--bg); white-space: pre-wrap; word-break: break-word;
                            font: 13px/1.6 ui-monospace, Consolas, monospace; color: var(--ink); }
 
+        /* ===== My orders (customer) ===== */
+        .order-row { display: grid; grid-template-columns: 136px 1fr auto; gap: 16px; align-items: center; padding: 14px 16px;
+                     border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+        .order-row:last-child { border-bottom: 0; }
+        .order-row:hover { background: #f7f9fc; }
+        .order-thumbs { display: flex; gap: 4px; }
+        .order-thumbs .visual { width: 44px; height: 44px; aspect-ratio: auto; border-radius: 8px; flex: none; }
+        .order-row-end { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; font-variant-numeric: tabular-nums; }
+
         /* ===== Responsif ===== */
         @media (max-width: 900px) {
             .grid { grid-template-columns: repeat(2, 1fr); }
@@ -446,6 +455,8 @@
             .cart-item .qty { grid-column: 2; }
             .cart-item .line-total { grid-column: 3; grid-row: 2; min-width: 0; }
             .cart-item .remove { grid-column: 3; grid-row: 1; justify-self: end; }
+            .order-row { grid-template-columns: 1fr auto; }
+            .order-thumbs { grid-column: 1 / -1; }
         }
         @media (max-width: 560px) {
             .grid { grid-template-columns: 1fr; }

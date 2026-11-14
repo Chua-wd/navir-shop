@@ -24,7 +24,8 @@
 
             {{-- Login state (Laravel Breeze) --}}
             @auth
-                                @if (Auth::user()->isAdmin())
+                <a href="{{ route('orders.index') }}" class="{{ request()->is('orders*') ? 'active' : '' }}">My orders</a>
+                @if (Auth::user()->isAdmin())
                     <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard*') ? 'active' : '' }}">
                         Dashboard · {{ \Illuminate\Support\Str::of(Auth::user()->name)->before(' ') }}
                     </a>

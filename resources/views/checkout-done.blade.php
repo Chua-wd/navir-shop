@@ -10,6 +10,9 @@
             Order <b>{{ $checkout->code }}</b> &middot; Rp {{ number_format($checkout->total) }}.
             We'll check your transfer and reply within 1 business day.
         </p>
-        <a href="{{ url('/products') }}" class="btn" style="margin-top: 8px;">Back to the shop</a>
+        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px;">
+            <a href="{{ route('orders.show', $checkout) }}" class="btn">Track this order</a>
+            <a href="{{ url('/products') }}" class="btn btn-ghost">Back to the shop</a>
+        </div>
     </div>
 @endsection
