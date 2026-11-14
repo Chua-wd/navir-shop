@@ -137,6 +137,20 @@ php artisan test
 
 ---
 
+## Documentation
+
+Everything about the product, written for different readers (`docs/specs/`):
+
+| Document | For | File |
+|---|---|---|
+| Business Requirements (BRD) | Stakeholders: why it exists | [NAVIR-01-BRD.pdf](docs/specs/NAVIR-01-BRD.pdf) |
+| Product Requirements (PRD) | Product team: what it does | [NAVIR-02-PRD.pdf](docs/specs/NAVIR-02-PRD.pdf) |
+| SRS & Technical Design | Developers: how it is built | [NAVIR-03-SRS-Technical-Design.pdf](docs/specs/NAVIR-03-SRS-Technical-Design.pdf) |
+| Design System | Designers and front-end | [NAVIR-04-Design-System.pdf](docs/specs/NAVIR-04-Design-System.pdf) |
+| User Guide (with screenshots) | Shoppers and admins | [PDF](docs/specs/NAVIR-05-User-Guide.pdf) · [Word](docs/specs/NAVIR-05-User-Guide.docx) |
+
+---
+
 ## Project structure (main parts)
 
 ```

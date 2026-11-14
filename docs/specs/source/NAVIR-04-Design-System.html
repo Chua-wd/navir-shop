@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NAVIR Design System v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+        /* ===== Design tokens: tema biru/putih ===== */
+        :root {
+            --bg: #eef2f6;          /* latar abu-biru muda */
+            --surface: #ffffff;
+            --panel: #e3e9f0;       /* panel gambar produk */
+            --line: #d5dde7;
+            --ink: #0b1b2b;         /* teks utama (navy hampir hitam) */
+            --muted: #5d6d7e;
+            --navy: #0f2a4a;
+            --blue: #1d4f86;
+            --blue-soft: #dbe7f3;
+            --radius: 10px;
+            --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+            --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+            /* Chart colors (checked with the dataviz palette validator on the white card surface) */
+            --chart-1: #2f6aa8;        /* the one data series color (brand blue, mid-lightness) */
+            --chart-track: #dbe7f3;    /* lighter step of the same blue, for meter/bar tracks */
+            --chart-grid: #e6ebf1;     /* hairline gridlines */
+            --good: #0ca30c;  --good-text: #006300;  --good-bg: #e7f5e7;
+            --warning: #fab219;  --warning-bg: #fff4dc;
+            --critical: #d03b3b;  --critical-text: #b42318;  --critical-bg: #fdecea;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.5; }
+        a { color: inherit; }
+        img, svg { display: block; max-width: 100%; }
+        .container { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+        main { min-height: 70vh; padding: 28px 0 64px; }
+
+        /* ===== Tipografi ===== */
+        .display { font-family: var(--serif); font-weight: 400; line-height: 1.02; letter-spacing: -.01em; margin: 0; }
+        .display-xl { font-size: clamp(44px, 6vw, 84px); }
+        .display-lg { font-size: clamp(36px, 4vw, 52px); }
+        .display-md { font-size: 30px; }
+        .eyebrow { font-size: 12px; color: var(--muted); letter-spacing: .02em; }
+        .muted { color: var(--muted); }
+        .lead { font-size: 18px; line-height: 1.45; }
+
+        /* ===== Tombol & chip ===== */
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 26px;
+               border-radius: var(--radius); border: 1px solid var(--navy); background: var(--navy); color: #fff;
+               font: 500 14px var(--sans); text-decoration: none; cursor: pointer; }
+        .btn:hover { background: var(--blue); border-color: var(--blue); }
+        .btn-ghost { background: transparent; color: var(--navy); border-color: var(--line); }
+        .btn-ghost:hover { background: var(--surface); color: var(--navy); border-color: var(--navy); }
+        .btn-sm { height: 34px; padding: 0 14px; font-size: 13px; }
+        .btn-danger { background: transparent; color: #b42318; border-color: #f0c8c4; }
+        .btn-danger:hover { background: #fdecea; color: #b42318; border-color: #b42318; }
+
+        .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+        .chip { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border: 1px solid var(--line);
+                border-radius: 6px; background: var(--surface); font-size: 12px; text-decoration: none; color: var(--ink); }
+        .chip:hover { border-color: var(--navy); }
+        .chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+        .pill { background: var(--surface); border-radius: var(--radius); }
+        .alert { padding: 12px 16px; border-radius: var(--radius); background: var(--blue-soft); color: var(--navy); margin-bottom: 20px; }
+        .alert-error { background: #fdecea; color: #8a1c12; }        .alert ul { margin: 0; padding-left: 18px; }
+        hr.rule { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+
+        /* ===== Navbar ===== */
+        .site-header { position: sticky; top: 0; z-index: 10; padding: 14px 0; background: linear-gradient(var(--bg) 70%, transparent); }
+        .nav { display: flex; justify-content: space-between; gap: 12px; }
+        .nav-group { display: flex; align-items: center; gap: 4px; padding: 6px; background: var(--surface); border-radius: var(--radius); }
+        .nav-group a { padding: 7px 12px; border-radius: 7px; text-decoration: none; font-size: 13px; color: var(--ink); }
+        .nav-group a:hover { background: var(--bg); }
+        .nav-group a.active { background: var(--bg); font-weight: 600; }
+        .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; letter-spacing: .08em; }
+        .brand-mark { width: 18px; height: 18px; }
+        .count { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 18px; margin-left: 6px;
+                 padding: 0 5px; border: 1px solid var(--line); border-radius: 4px; font-size: 11px; }
+        .nav-account { display: flex; align-items: center; gap: 4px; }
+        .nav-group a, .nav-account a { white-space: nowrap; }
+
+        /* Phone menu: ☰ button + panel (only below 900px, see "Responsif") */
+        .menu-btn { display: none; align-items: center; justify-content: center; width: 38px; height: 34px; border: 0; border-radius: 7px;
+                    background: transparent; color: inherit; font-size: 18px; cursor: pointer; }
+        .menu-btn:hover { background: var(--bg); }
+        .mobile-menu { position: relative; z-index: 11; margin-top: 8px; }
+        .mobile-menu[hidden] { display: none; }
+        .mobile-menu-card { display: flex; flex-direction: column; padding: 8px; background: var(--surface); border-radius: var(--radius);
+                            box-shadow: 0 16px 40px rgba(11,27,43,.16); }
+        .mobile-menu-card a, .mobile-menu-card button { display: block; width: 100%; padding: 12px 14px; border: 0; border-radius: 8px;
+                            background: none; font: 15px var(--sans); text-align: left; text-decoration: none; color: var(--ink); cursor: pointer; }
+        .mobile-menu-card a:hover, .mobile-menu-card button:hover, .mobile-menu-card a.active { background: var(--bg); }
+        .mobile-menu-card a.active { font-weight: 600; }
+        .mobile-menu-card hr { width: 100%; margin: 6px 0; border: 0; border-top: 1px solid var(--line); }
+        .mobile-menu-card form { margin: 0; }
+
+        /* ===== Panel gambar produk ===== */
+        .visual { background: var(--panel); border-radius: var(--radius); overflow: hidden; aspect-ratio: 4 / 5; }
+        .visual svg { width: 100%; height: 100%; }
+
+        /* Product without a photo (components/product-visual): name in the display serif, like
+           card titles, so an empty slot still reads as Navir and not as a broken image.
+           Container queries swap to a single initial in tiny thumbnails (dashboard table, gallery). */
+        .pv-empty { container-type: size; box-sizing: border-box; width: 100%; height: 100%; padding: 10%;
+                    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+                    text-align: center; color: var(--navy); background: var(--panel); }
+        .pv-empty__name { font-family: var(--serif); font-size: clamp(18px, 11cqi, 44px); line-height: 1.05; overflow-wrap: anywhere; }
+        .pv-empty__size { font-size: 13px; }
+        .pv-empty__note { margin-top: 10px; font-size: 12px; color: #46566a; } /* 5.8:1 on --panel */
+        .pv-empty__initial { display: none; font-family: var(--serif); font-size: 55cqmin; line-height: 1; }
+        .pv-empty--dark { background: transparent; color: #eaf2fa; }
+        .pv-empty--dark .pv-empty__note { color: inherit; } /* the hero's lighter centre needs full-strength text */
+        @container (max-width: 150px) {
+            .pv-empty__name, .pv-empty__size, .pv-empty__note { display: none; }
+            .pv-empty__initial { display: block; }
+        }
+
+        /* ===== Kartu produk ===== */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .card { display: block; text-decoration: none; color: inherit; }
+        .card .visual { transition: transform .25s ease; }
+        .card:hover .visual { transform: translateY(-3px); }
+        .card-body { display: flex; justify-content: space-between; gap: 12px; padding: 12px 2px 0; }
+        .card-title { font-family: var(--serif); font-size: 22px; line-height: 1.1; margin: 2px 0 0; }
+        .card-price { font-family: var(--serif); font-size: 22px; white-space: nowrap; }
+
+        /* ===== Akordeon (Product overview / Specifications / Delivery) ===== */
+        .accordion details { background: var(--panel); border-radius: 8px; margin-top: 8px; }
+        .accordion summary { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px;
+                             cursor: pointer; list-style: none; font-size: 13px; }
+        .accordion summary::-webkit-details-marker { display: none; }
+        .accordion summary::after { content: "↗"; font-size: 14px; transition: transform .2s; }
+        .accordion details[open] summary::after { transform: rotate(90deg); }
+        .accordion .content { padding: 0 16px 16px; font-size: 14px; color: var(--muted); }
+        .spec { display: grid; grid-template-columns: 140px 1fr; gap: 6px 12px; margin: 0; }
+        .spec dt { color: var(--muted); }
+        .spec dd { margin: 0; color: var(--ink); }
+
+        /* ===== Form ===== */
+        .form-card { background: var(--surface); border-radius: var(--radius); padding: 28px; max-width: 640px; }
+        .field { margin-bottom: 16px; }
+        .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+        .field input, .field select, .field textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--line);
+               border-radius: 8px; background: var(--bg); font: 15px var(--sans); color: var(--ink); }
+        .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--blue-soft); border-color: var(--blue); background: #fff; }
+        .field textarea { min-height: 110px; resize: vertical; }
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        /* ===== Tabel sederhana (keranjang) ===== */
+        .table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius); overflow: hidden; }
+        .table th, .table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--line); font-size: 14px; }
+        .table th { font-weight: 500; color: var(--muted); font-size: 12px; }
+
+        /* ===== Dashboard tables ===== */
+        .table td { vertical-align: middle; }
+        .table tr:last-child td { border-bottom: 0; }
+        .table tbody tr:hover td { background: #f7f9fc; }
+        .table .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .table .name { font-family: var(--serif); font-size: 19px; line-height: 1.15; }
+        .table .desc { color: var(--muted); max-width: 320px; }
+        .thumb-cell { width: 76px; }
+        .thumb-cell .visual { width: 56px; height: 70px; aspect-ratio: auto; border-radius: 6px; }
+        .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+        .row-actions form { margin: 0; }
+        .table-wrap { overflow-x: auto; border-radius: var(--radius); }
+        .page-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 4px; }
+        .image-field { display: flex; gap: 16px; align-items: flex-start; }
+        .image-field .visual { width: 96px; height: 120px; aspect-ratio: auto; flex: none; border-radius: 8px; }
+
+        /* ===== Pagination ===== */
+        .pagination { display: flex; justify-content: center; gap: 6px; list-style: none; padding: 0; margin: 36px 0 8px; }
+        .pagination .page-link { display: flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 10px;
+                                 border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+                                 color: var(--ink); text-decoration: none; font-size: 13px; }
+        .pagination .page-link:hover { border-color: var(--navy); }
+        .pagination .active .page-link { background: var(--navy); border-color: var(--navy); color: #fff; }
+        .pagination .disabled .page-link { color: #a8b3bf; background: transparent; }
+        .page-info { text-align: center; font-size: 12px; color: var(--muted); }
+
+        /* ===== Footer ===== */
+        .site-footer { border-top: 1px solid var(--line); padding: 28px 0 40px; font-size: 13px; color: var(--muted); }
+        .site-footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .site-footer nav a { margin-left: 18px; text-decoration: none; }
+        .site-footer nav a:hover { color: var(--ink); }
+
+        /* ===== Hero gelap (beranda) ===== */
+        body.dark-hero .site-header { position: absolute; left: 0; right: 0; background: none; }
+        body.dark-hero .site-header .nav-group { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16);
+                                                 backdrop-filter: blur(8px); }
+        body.dark-hero .site-header a { color: #e8f0f8; }
+        body.dark-hero .site-header a:hover, body.dark-hero .site-header a.active { background: rgba(255,255,255,.1); }
+        body.dark-hero .site-header .count { border-color: rgba(255,255,255,.35); }
+        body.dark-hero .site-header .menu-btn:hover { background: rgba(255,255,255,.1); }
+        body.dark-hero .mobile-menu-card a { color: var(--ink); }
+        body.dark-hero .mobile-menu-card a:hover, body.dark-hero .mobile-menu-card a.active { background: var(--bg); }
+        body.dark-hero main { padding-top: 48px; }
+
+        .hero { position: relative; min-height: max(100vh, 680px); overflow: hidden; color: #eaf2fa;
+                display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 18px;
+                background: radial-gradient(ellipse 70% 60% at 50% 38%, #2f6189 0%, #173a5a 45%, #0b1f33 100%); }
+        .hero-grain { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .14; mix-blend-mode: overlay; pointer-events: none; }
+        .hero-product { position: absolute; left: 50%; top: 9vh; transform: translateX(-50%); width: min(560px, 80vw); height: 66vh; }
+        /* Hero photo has a near-black studio background: fade its edges into the navy hero
+           so it reads as part of the scene instead of a dark rectangle. */
+        .hero-product img { display: block; width: 100%; height: 100%; object-fit: contain;
+                            -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+                                    mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); }
+        .hero-product svg { width: 100%; height: 100%; }
+        /* Wide (landscape) hero photo with its own transparent edges: no extra fade needed */
+        .hero-wide { top: 7vh; width: min(1080px, 92vw); height: 64vh; }
+        .hero-wide img { -webkit-mask-image: none; mask-image: none; }
+        .hero-title { position: relative; text-align: center; margin: 0 16px 22px;
+                      font-family: var(--serif); font-weight: 400; line-height: .95; letter-spacing: -.02em;
+                      font-size: clamp(46px, 8.4vw, 128px); text-shadow: 0 8px 40px rgba(5,18,32,.55); }
+        .hero-bottom { position: relative; }
+        .hero-bottom .container { display: grid; grid-template-columns: 1fr 2.6fr; gap: 20px; align-items: center; }
+        .hero-bottom p { margin: 0; font-size: 13px; color: #c9d8e6; max-width: 300px; }
+        .glass { display: flex; align-items: stretch; border: 1px solid rgba(255,255,255,.18); border-radius: var(--radius);
+                 background: rgba(255,255,255,.06); backdrop-filter: blur(10px); overflow: hidden; }
+        .glass span { display: flex; align-items: center; padding: 0 16px; font-size: 12px; color: #d6e3ef; white-space: nowrap; }
+        .glass .glass-btn { margin-left: auto; display: flex; align-items: center; justify-content: center; min-width: 240px; height: 48px;
+                            background: rgba(255,255,255,.14); color: #fff; text-decoration: none; font-size: 14px; }
+        .glass .glass-btn:hover { background: rgba(255,255,255,.24); }
+        .promo { position: absolute; right: 4vw; top: 46vh; width: 260px; padding: 18px; border-radius: 16px;
+                 background: #f4f8fc; color: var(--ink); text-decoration: none; box-shadow: 0 24px 60px rgba(4,15,28,.35); }
+        .promo .arrow { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+                        border-radius: 10px; background: var(--navy); color: #fff; font-size: 18px; }
+
+        /* ===== Toolbar katalog (sort + kategori) ===== */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+                   padding: 8px; background: var(--surface); border-radius: 14px; margin: 18px 0 24px; }
+        .tabs { display: flex; gap: 4px; }
+        .tabs a { padding: 9px 18px; border-radius: 10px; text-decoration: none; font-size: 13px; color: var(--ink); }
+        .tabs a.active { background: var(--navy); color: #fff; }
+        .cat-links { display: flex; flex-wrap: wrap; gap: 2px; }
+        .cat-links a { padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; color: var(--muted); }
+        .cat-links a:hover { color: var(--ink); }
+        .cat-links a.active { color: var(--ink); font-weight: 600; }
+
+        /* ===== Auth (Laravel Breeze): login, daftar, lupa password ===== */
+        .auth { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+        .auth-side { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
+                     padding: 28px 36px; color: #eaf2fa;
+                     background: radial-gradient(ellipse 80% 70% at 50% 40%, #2f6189 0%, #173a5a 50%, #0b1f33 100%); }
+        .auth-side a { color: inherit; text-decoration: none; }
+        .auth-photo { position: absolute; left: 50%; top: 8%; transform: translateX(-50%); width: auto; height: 62%;
+                      max-width: 80%; object-fit: contain; filter: drop-shadow(0 24px 40px rgba(4,15,28,.45)); pointer-events: none; }
+        .auth-side .display { font-size: clamp(40px, 4.6vw, 68px); text-shadow: 0 8px 40px rgba(5,18,32,.5); }
+        .auth-side ul { list-style: none; padding: 0; margin: 20px 0 0; display: flex; gap: 8px; flex-wrap: wrap; }
+        .auth-side li { padding: 6px 12px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; font-size: 12px;
+                        background: rgba(255,255,255,.06); }
+        .auth-main { display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+        .auth-card { width: 100%; max-width: 420px; }
+        .auth-card .field input { background: var(--surface); }
+        .auth-links { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 18px; font-size: 13px; }
+        .auth-links a { color: var(--muted); }
+        .auth-links a:hover { color: var(--ink); }
+        .check { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+        .check input { width: 16px; height: 16px; accent-color: var(--navy); }
+        .field-error { margin: 6px 0 0; padding: 0; list-style: none; font-size: 12px; color: #b42318; }
+        .btn-block { width: 100%; }
+
+        /* ===== Halaman akun & profil ===== */
+        .section-card { background: var(--surface); border-radius: var(--radius); padding: 28px; }
+        .section-card + .section-card { margin-top: 16px; }
+        .section-card h2 { font-family: var(--serif); font-weight: 400; font-size: 28px; margin: 0; }
+        .section-card .intro { color: var(--muted); font-size: 14px; margin: 4px 0 20px; max-width: 560px; }
+        .saved { font-size: 13px; color: var(--blue); }
+        summary.btn { list-style: none; }
+        summary.btn::-webkit-details-marker { display: none; }
+
+        /* ===== Admin layout with sidebar ===== */
+        .admin { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; }
+        .side-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; gap: 18px;
+                   padding: 20px 14px; background: var(--surface); border-right: 1px solid var(--line); }
+        .side-search { display: flex; align-items: center; gap: 8px; padding: 0 12px; height: 38px; border-radius: 8px;
+                       background: var(--bg); color: var(--muted); }
+        .side-search input { flex: 1; min-width: 0; border: 0; background: transparent; font: 13px var(--sans); color: var(--ink); outline: none; }
+        .side-search:focus-within { outline: 2px solid var(--blue-soft); }
+        .side-nav { display: flex; flex-direction: column; gap: 2px; }
+        .side-nav a { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px;
+                      font-size: 14px; color: var(--ink); text-decoration: none; }
+        .side-nav a:hover { background: var(--bg); }
+        .side-nav a.active { background: var(--navy); color: #fff; }
+        .side-nav-small a { font-size: 13px; padding: 7px 10px; color: var(--muted); }
+        .side-nav .badge { margin-left: auto; min-width: 24px; text-align: center; font-size: 11px; padding: 1px 7px;
+                           border-radius: 999px; background: var(--bg); color: var(--muted); }
+        .side-nav a.active .badge { background: rgba(255,255,255,.16); color: #fff; }
+        .side-label { margin: 0 0 6px; padding: 0 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+        .side-user { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 10px; background: var(--bg); }
+        .avatar { width: 34px; height: 34px; flex: none; display: inline-flex; align-items: center; justify-content: center;
+                  border-radius: 8px; background: var(--navy); color: #fff; font-size: 12px; font-weight: 600; }
+        .avatar-sm { width: 28px; height: 28px; border-radius: 50%; background: var(--blue-soft); color: var(--navy); font-size: 11px; }
+        .icon-btn { display: inline-flex; padding: 6px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; }
+        .icon-btn:hover { background: var(--surface); color: var(--ink); }
+        .admin-main { min-width: 0; padding: 28px 32px 56px; }
+        .admin-main .page-head { margin-bottom: 18px; }
+
+        /* ===== Dashboard ===== */
+        .dash-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+        .segmented { display: inline-flex; gap: 2px; padding: 4px; border-radius: 10px; background: var(--surface); }
+        .segmented a { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 7px;
+                       font-size: 13px; color: var(--muted); text-decoration: none; }
+        .segmented a:hover { color: var(--ink); background: var(--bg); }
+        .segmented a.active { background: var(--navy); color: #fff; font-weight: 600; }
+        .dash-card { background: var(--surface); border-radius: 14px; padding: 20px; min-width: 0; }
+        .dash-card h2 { margin: 0; font-size: 15px; font-weight: 600; }
+        .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+        .card-head a { font-size: 12px; color: var(--muted); }
+        .dash-row { display: grid; gap: 16px; margin-top: 16px; }
+
+        .kpi-strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) 210px; background: var(--surface); border-radius: 14px; }
+        .kpi { padding: 18px 16px; border-right: 1px solid var(--line); min-width: 0; }
+        .kpi-top { display: flex; align-items: center; gap: 8px; min-height: 28px; font-size: 12px; line-height: 1.2; color: var(--muted); }
+        .kpi-value-row { display: flex; align-items: center; gap: 8px; }
+        .kpi-value-row .task-mark { margin-left: auto; }
+        .kpi-sub { display: block; margin-top: 4px; }
+        .kpi-icon { width: 28px; height: 28px; flex: none; display: inline-flex; align-items: center; justify-content: center;
+                    border-radius: 8px; background: var(--blue-soft); color: var(--navy); }
+        .kpi-value { margin: 12px 0 8px; font-size: 28px; font-weight: 600; letter-spacing: -.01em; line-height: 1.1; white-space: nowrap; }
+        .kpi-note { font-size: 11px; color: var(--muted); }
+        .task-mark { margin-left: auto; font-size: 10px; padding: 1px 6px; border-radius: 999px; background: var(--bg); color: var(--muted); }
+        .delta { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+        .delta.up { color: var(--good-text); background: var(--good-bg); }
+        .delta.down { color: var(--critical-text); background: var(--critical-bg); }
+        .delta.flat { color: var(--muted); background: var(--bg); }
+
+        .meter { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 18px; text-align: center; }
+        .meter svg { width: 168px; height: auto; }
+        .meter-value { margin-top: -54px; font-size: 26px; font-weight: 600; }
+        .meter-label { font-size: 11px; color: var(--muted); }
+
+        .line-chart { position: relative; outline: none; }
+        .line-chart svg { width: 100%; height: auto; overflow: visible; }
+        .line-chart:focus-visible { outline: 2px solid var(--blue-soft); border-radius: 8px; }
+        .line-chart .grid { stroke: var(--chart-grid); stroke-width: 1; }
+        .line-chart .grid.base { stroke: var(--line); }
+        .line-chart .tick { font: 11px var(--sans); fill: var(--muted); font-variant-numeric: tabular-nums; }
+        .line-chart .crosshair { stroke: var(--muted); stroke-width: 1; }
+        .chart-tip { position: absolute; transform: translateX(-50%); pointer-events: none; padding: 7px 10px; border-radius: 8px;
+                     background: var(--ink); color: #fff; font-size: 12px; line-height: 1.3; white-space: nowrap;
+                     display: flex; flex-direction: column; box-shadow: 0 6px 20px rgba(11,27,43,.18); }
+        .chart-tip strong { font-size: 14px; }
+        .chart-tip span { color: #b9c6d3; }
+        .chart-table summary { cursor: pointer; font-size: 12px; color: var(--muted); margin-top: 8px; }
+        .chart-table .table { margin-top: 8px; max-height: 260px; display: block; overflow-y: auto; }
+        .chart-big { font-size: 30px; font-weight: 600; letter-spacing: -.01em; }
+
+        .hbars { display: flex; flex-direction: column; gap: 12px; }
+        .hbar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+        .hbar-row { display: flex; align-items: center; gap: 8px; }
+        .hbar { height: 18px; min-width: 2px; background: var(--chart-1); border-radius: 0 4px 4px 0; }
+        .hbar:hover { filter: brightness(1.12); }
+        .hbar-value { font-size: 12px; color: var(--ink); font-variant-numeric: tabular-nums; }
+        .track { height: 8px; border-radius: 999px; background: var(--chart-track); overflow: hidden; }
+        .track > span { display: block; height: 100%; border-radius: 999px; background: var(--chart-1); }
+
+        .list-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+        .list-row:first-child { border-top: 0; }
+        .list-thumb .visual { width: 40px; height: 50px; aspect-ratio: auto; border-radius: 6px; }
+
+        .pill-status { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px;
+                       background: var(--bg); color: var(--ink); white-space: nowrap; }
+        .pill-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+        .pill-status.delivered { background: var(--good-bg); }   .pill-status.delivered::before { background: var(--good); }
+        .pill-status.pending { background: var(--warning-bg); }  .pill-status.pending::before { background: var(--warning); }
+        .pill-status.returned { background: var(--critical-bg); } .pill-status.returned::before { background: var(--critical); }
+        .pill-status.processing, .pill-status.shipped { background: var(--blue-soft); }
+        .pill-status.processing::before { background: var(--chart-1); }
+        .pill-status.shipped::before { background: var(--navy); }
+        
+        .confirm-delete { display: inline-flex; gap: 6px; align-items: center; } .confirm-delete[open] summary { display: none; }
+
+        /* ===== Cart & checkout ===== */
+        /* Steps: Cart -> Checkout -> Payment */
+        .steps { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 22px; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+        .steps li { display: flex; align-items: center; gap: 8px; }
+        .steps li + li::before { content: ""; width: 28px; height: 1px; background: var(--line); }
+        .steps .n { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line); font-size: 11px; }
+        .steps .on { color: var(--navy); font-weight: 600; }
+        .steps .on .n, .steps .done .n { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+        /* Quantity − 1 + */
+        .qty { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); height: 46px; }
+        .qty button { width: 40px; height: 100%; border: 0; background: none; font: 18px var(--sans); color: var(--navy); cursor: pointer; }
+        .qty button:hover:not(:disabled) { background: var(--bg); }
+        .qty button:disabled { color: var(--line); cursor: default; }
+        .qty input, .qty span { width: 34px; border: 0; background: none; text-align: center; font: 15px var(--sans); color: var(--ink); font-variant-numeric: tabular-nums; -moz-appearance: textfield; }
+        .qty input::-webkit-inner-spin-button, .qty input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .qty.sm { height: 34px; }
+        .qty.sm button { width: 32px; font-size: 16px; }
+
+        /* "Added to cart" popup */
+        .toast { position: fixed; right: 20px; bottom: 20px; z-index: 60; display: flex; gap: 14px; align-items: center; max-width: calc(100vw - 40px);
+                 padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+                 box-shadow: 0 12px 32px rgba(11,27,43,.14); animation: toast-in .25s ease; }
+        .toast .visual { width: 48px; height: 48px; aspect-ratio: auto; border-radius: 8px; flex: none; }
+        @keyframes toast-in { from { transform: translateY(140%); } }
+
+        .cart-item { display: grid; grid-template-columns: 72px 1fr auto auto 28px; gap: 16px; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+        .cart-item:last-child { border-bottom: 0; }
+        .cart-thumb { width: 72px; height: 72px; aspect-ratio: auto; border-radius: 8px; }
+        .cart-item .name { font-family: var(--serif); font-size: 20px; line-height: 1.15; color: var(--ink); text-decoration: none; }
+        .cart-item .line-total { min-width: 110px; text-align: right; font-variant-numeric: tabular-nums; }
+        .remove-btn { border: 0; background: none; color: var(--muted); font-size: 18px; cursor: pointer; border-radius: 6px; width: 28px; height: 28px; }
+        .remove-btn:hover { background: #fdecea; color: #b42318; }
+
+        .summary .row { display: flex; justify-content: space-between; gap: 12px; margin: 6px 0; font-size: 14px; }
+        .summary .row span:last-child { font-variant-numeric: tabular-nums; }
+        .hint { font-size: 12px; color: var(--muted); }
+        .ship-bar { height: 4px; border-radius: 4px; background: var(--bg); overflow: hidden; margin-top: 6px; }
+        .ship-bar i { display: block; height: 100%; background: var(--blue); }
+
+        .mini-item { display: flex; gap: 10px; align-items: center; font-size: 13px; margin: 8px 0; }
+        .mini-item .visual { width: 40px; height: 40px; aspect-ratio: auto; border-radius: 6px; flex: none; }
+        .mini-item .grow { flex: 1; }
+
+        .pay-box { border: 1px dashed var(--blue); background: var(--blue-soft); border-radius: var(--radius); padding: 18px 20px; }
+        .pay-box .acct { font-family: var(--serif); font-size: 28px; letter-spacing: .02em; }
+        .field textarea.prefilled { min-height: 260px; font: 13px/1.55 ui-monospace, Consolas, monospace; }
+        .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--blue-soft); color: var(--navy); }
+        .field input[readonly] { color: var(--muted); }
+
+        /* ===== User management ===== */
+        .user-filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .user-search { flex: 0 1 420px; height: 40px; background: var(--bg); }
+        .role-select { height: 38px; min-width: 150px; padding: 0 32px 0 12px; border: 1px solid var(--line); border-radius: 8px;
+                       background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235d6d7e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+                       font: 14px var(--sans); color: var(--ink); cursor: pointer; -webkit-appearance: none; appearance: none; }
+        .role-select:hover { border-color: var(--navy); }
+        .role-select:focus { outline: 2px solid var(--blue-soft); border-color: var(--blue); }
+        .role-select.is-static { display: inline-flex; align-items: center; background: var(--bg); color: var(--muted); cursor: default; }
+        .role-select.is-static:hover { border-color: var(--line); }
+        .users-table td { padding-top: 10px; padding-bottom: 10px; }
+        .users-table th:last-child, .users-table td:last-child { width: 1%; white-space: nowrap; }
+        .sort-link { color: inherit; text-decoration: none; }
+        .sort-link:hover { color: var(--ink); }
+        .trash-btn { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid var(--line);
+                     border-radius: 8px; background: var(--surface); color: var(--muted); cursor: pointer; list-style: none; }
+        .trash-btn::-webkit-details-marker { display: none; }
+        .trash-btn:hover { border-color: #f0c8c4; background: #fdecea; color: #b42318; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+        /* ===== Orders (admin) ===== */
+        .payment-message { margin: 0; padding: 14px 16px; border-radius: 10px; background: var(--bg); white-space: pre-wrap; word-break: break-word;
+                           font: 13px/1.6 ui-monospace, Consolas, monospace; color: var(--ink); }
+
+        /* ===== My orders (customer) ===== */
+        .order-row { display: grid; grid-template-columns: 136px 1fr auto; gap: 16px; align-items: center; padding: 14px 16px;
+                     border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+        .order-row:last-child { border-bottom: 0; }
+        .order-row:hover { background: #f7f9fc; }
+        .order-thumbs { display: flex; gap: 4px; }
+        .order-thumbs .visual { width: 44px; height: 44px; aspect-ratio: auto; border-radius: 8px; flex: none; }
+        .order-row-end { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; font-variant-numeric: tabular-nums; }
+
+        /* ===== Demo accounts box (login page) ===== */
+        .demo-box { margin-top: 24px; padding: 16px 18px; border: 1px dashed var(--blue); border-radius: var(--radius); background: var(--blue-soft); }
+        .demo-box code { font: 13px ui-monospace, Consolas, monospace; padding: 1px 6px; border-radius: 4px; background: var(--surface); color: var(--navy); }
+        .demo-box .btn { background: var(--surface); }
+
+        /* ===== Shop search ===== */
+        .shop-search { width: 280px; max-width: 100%; height: 38px; margin: 0; background: var(--surface); border: 1px solid var(--line); }
+        .shop-search:focus-within { border-color: var(--blue); }
+
+        /* "← All products" on the product page */
+        .back-link { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; margin-bottom: 14px;
+                     border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink);
+                     font-size: 13px; text-decoration: none; }
+        .back-link:hover { border-color: var(--navy); }
+
+        /* ===== Find my routine (skin quiz) ===== */
+        .routine-quiz { display: grid; gap: 14px; }
+        .routine-question { margin: 0; padding: 20px; border: 0; }
+        .routine-question legend { float: left; width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+                                   font-family: var(--serif); font-size: 22px; line-height: 1.2; }
+        .routine-n { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%;
+                     background: var(--navy); color: #fff; font: 600 13px var(--sans); }
+        .routine-options { clear: both; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+        .routine-option { position: relative; display: block; cursor: pointer; }
+        .routine-option input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+        .routine-option span { display: flex; align-items: center; min-height: 52px; height: 100%; padding: 12px 14px;
+                               border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; }
+        .routine-option:hover span { border-color: var(--navy); }
+        .routine-option input:checked + span { background: var(--navy); border-color: var(--navy); color: #fff; }
+        .routine-option input:focus-visible + span { outline: 2px solid var(--blue); outline-offset: 2px; }
+        .routine-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .routine-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 0; padding: 0; list-style: none; }
+        .routine-step { padding: 20px; }
+        .routine-step-head { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+        .routine-item { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: start; }
+        .routine-item + .routine-item { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+        .routine-item .visual { width: 72px; height: 90px; aspect-ratio: auto; border-radius: 8px; }
+        .routine-item-name { font-family: var(--serif); font-size: 19px; line-height: 1.15; color: var(--ink); text-decoration: none; }
+        .routine-item form { margin: 0; }
+        .routine-buy { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 16px; padding: 20px; }
+        .routine-extras { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+        /* ===== Ratings & reviews ===== */
+        /* Star rating component (components/stars.blade.php): grey stars with gold stars on top, cut to the rating width */
+        .stars { position: relative; display: inline-block; line-height: 1; letter-spacing: 1px; white-space: nowrap; vertical-align: middle; }
+        .stars-empty { color: var(--line); }
+        .stars-full { position: absolute; top: 0; left: 0; overflow: hidden; color: #c98a12; }
+        .card-rating { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 12px; color: var(--muted); }
+        .rating-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; color: var(--muted); text-decoration: none; }
+        .rating-link:hover { color: var(--ink); }
+        .rating-bar { display: grid; grid-template-columns: 34px 1fr 24px; gap: 8px; align-items: center; margin: 4px 0; font-size: 12px; }
+        .rating-bar .track > span { background: #c98a12; }
+        .review { padding: 18px 22px; border-bottom: 1px solid var(--line); }
+        .review:last-child { border-bottom: 0; }
+        /* Star picker: radios in reverse order, so "~" can light up the stars before the hovered one */
+        .star-input { display: inline-flex; flex-direction: row-reverse; gap: 2px; margin: 0; padding: 0; border: 0; }
+        .star-input input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+        .star-input label { font-size: 28px; line-height: 1; color: var(--line); cursor: pointer; }
+        .star-input label:hover, .star-input label:hover ~ label,
+        .star-input input:checked ~ label { color: #c98a12; }
+        .star-input input:focus-visible + label { outline: 2px solid var(--blue); border-radius: 4px; }
+
+        /* ===== Responsif ===== */
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            .split { grid-template-columns: 1fr !important; }
+            .nav-links { display: none !important; }
+            .nav-account { display: none; }
+            .menu-btn { display: inline-flex; }
+            /* Quiz card: below the "Shop now" bar on phones instead of floating over the photo */
+            .promo { position: relative; right: auto; top: auto; order: 1; width: auto; margin: 16px 16px 0; }
+            .admin { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } /* header row stays compact, content takes the rest */
+            .sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+            /* Phones: only the logo + ☰ until the menu is opened */
+            .sidebar:not(.open) > :not(.side-top) { display: none; }
+            .side-user { margin-top: 0; }
+            .admin-main { padding: 20px 16px 48px; }
+            .kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .kpi { border-bottom: 1px solid var(--line); }
+            .dash-row { grid-template-columns: 1fr !important; }
+            .auth { grid-template-columns: 1fr; }
+            .auth-side { min-height: 460px; }
+            .auth-photo { top: 9%; height: 50%; }
+            .hero { justify-content: flex-start; padding-top: 84px; min-height: 0; }
+            .hero-product { position: relative; left: auto; top: auto; transform: none; margin: 0 auto;
+                            width: 80vw; height: min(52vh, 420px); min-height: 260px; }
+            .hero-wide { width: 100%; height: auto; min-height: 0; aspect-ratio: 3 / 2; }
+            .hero-bottom .container { grid-template-columns: 1fr; }
+            .glass span:not(:first-child) { display: none; }
+            .glass .glass-btn { min-width: 0; flex: 1; padding: 0 16px; }
+            /* Shop sort buttons + categories: one row each that you can swipe sideways */
+            .toolbar { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+            .toolbar > .side-search { flex: none; width: 100%; height: 40px; } /* search box inside a stacked toolbar (admin Orders) */
+            .tabs, .cat-links { min-width: 0; max-width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+            .tabs::-webkit-scrollbar, .cat-links::-webkit-scrollbar { display: none; }
+            .tabs a, .cat-links a { flex: none; white-space: nowrap; }
+            .cart-item { grid-template-columns: 60px 1fr auto; gap: 10px 14px; }
+            .cart-thumb { width: 60px; height: 60px; grid-row: span 2; }
+            .cart-item .qty { grid-column: 2; }
+            .cart-item .line-total { grid-column: 3; grid-row: 2; min-width: 0; }
+            .cart-item .remove { grid-column: 3; grid-row: 1; justify-self: end; }
+            .order-row { grid-template-columns: 1fr auto; }
+            .order-thumbs { grid-column: 1 / -1; }
+            .routine-steps { grid-template-columns: 1fr; }
+            .routine-buy .btn { width: 100%; }
+        }
+        @media (max-width: 560px) {
+            .grid { grid-template-columns: 1fr; }
+            .row-2 { grid-template-columns: 1fr; }
+        }
+    
+</style>
+<style>
+/* ===== Document-only styles (not part of the shop) ===== */
+@page { size: 1100px 1556px; margin: 40px; } /* wide page so desktop components render at desktop width */
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { background: #fff; font-size: 12.5px; line-height: 1.5; }
+.ds { max-width: none; margin: 0; }
+.ds-page { break-after: page; }
+.ds-page:last-child { break-after: auto; }
+.ds-block { break-inside: avoid; }
+.ds-h1 { font-family: var(--serif); font-weight: 400; font-size: 34px; line-height: 1.05; margin: 0 0 4px; letter-spacing: -.01em; }
+.ds-h2 { font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 1.1; margin: 0 0 4px; }
+.ds-h3 { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 18px 0 6px; }
+.ds-lead { font-size: 14px; color: var(--ink); margin: 0 0 10px; max-width: 620px; }
+.ds p { margin: 0 0 8px; }
+.ds ul { margin: 0 0 8px; padding-left: 18px; }
+.ds code, .ds pre { font: 11px/1.45 ui-monospace, Consolas, monospace; }
+.ds code { background: var(--bg); padding: 1px 5px; border-radius: 4px; }
+.ds pre { background: var(--bg); border-radius: 8px; padding: 12px 14px; white-space: pre-wrap; margin: 6px 0 12px; }
+.stage { background: var(--bg); border-radius: 12px; padding: 16px; margin: 6px 0 12px; }
+.stage.dark { background: radial-gradient(ellipse 90% 90% at 50% 20%, #2f6189 0%, #173a5a 55%, #0b1f33 100%); color: #eaf2fa; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.cap { font-size: 11px; color: var(--muted); margin-top: 4px; }
+table.ds-table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 11.5px; }
+.ds-table th, .ds-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ds-table th { font-size: 10.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 6px 0 12px; }
+.swatch { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #fff; break-inside: avoid; }
+.swatch i { display: block; height: 52px; border-bottom: 1px solid var(--line); }
+.swatch div { padding: 7px 9px; font-size: 11px; }
+.swatch b { display: block; font-size: 11.5px; }
+.swatch span { color: var(--muted); display: block; }
+.dont, .do { border-radius: 10px; padding: 10px 12px; font-size: 12px; }
+.do { background: var(--good-bg); }
+.dont { background: var(--critical-bg); }
+.do b { color: var(--good-text); } .dont b { color: var(--critical-text); }
+.ico { display: flex; margin: 0 auto 4px; width: 36px; height: 36px; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+.ico-cell { text-align: center; font-size: 10px; color: var(--muted); }
+.ds .site-header { position: static; padding: 0; background: none; }
+.ds .stage .container { padding: 0; max-width: none; }
+.ds .sidebar { position: static; height: auto; width: 252px; border: 1px solid var(--line); border-radius: 12px; }
+.phone { width: 330px; background: var(--bg); border: 1px solid var(--line); border-radius: 18px; padding: 12px; }
+.phone .nav-links, .phone .nav-account { display: none !important; }
+.phone .menu-btn { display: inline-flex; }
+.phone .mobile-menu { display: block; margin-top: 8px; }
+.ds .card-demo { width: 270px; }
+.cover { min-height: 1360px; display: flex; flex-direction: column; justify-content: center; }
+.cover .ds-h1 { font-size: 64px; }
+</style>
+</head>
+<body>
+<div class="ds">
+
+<!-- ================= COVER ================= -->
+<section class="ds-page cover">
+  <p class="eyebrow">( design system )</p>
+  <h1 class="ds-h1">NAVIR Design System</h1>
+  <p class="ds-lead" style="font-size:18px;margin-top:10px;">The colours, type, spacing and components of the NAVIR men's skincare shop, with the exact values and the class names used in the code.</p>
+  <table class="ds-table" style="max-width:520px;margin-top:18px;">
+    <tr><th>Version</th><td>1.0</td></tr>
+    <tr><th>Date</th><td>14 November 2026</td></tr>
+    <tr><th>Source of truth</th><td>One stylesheet: <code>resources/views/layouts/partials/styles.blade.php</code></td></tr>
+    <tr><th>Used by</th><td>Designers, front-end developers, anyone building a NAVIR-style page or a new project in this style</td></tr>
+  </table>
+  <h3 class="ds-h3">How to use this document</h3>
+  <ul style="max-width:560px;">
+    <li>Every colour, size and radius is given as a <b>number you can copy</b> (section 10 repeats them all as CSS variables).</li>
+    <li>Components are shown <b>rendered with the real classes</b> (for example <code>.btn</code>, <code>.chip</code>, <code>.pill-status</code>), so the picture and the code always match.</li>
+    <li><b>To reuse in another project:</b> keep sections 1 to 5 and 7 to 9 as the rules, replace the brand colours and fonts in sections 2 and 3, and re-render section 6 with the new tokens.</li>
+  </ul>
+  <h3 class="ds-h3">Contents</h3>
+  <p>1 Brand principles and voice · 2 Colour · 3 Typography · 4 Spacing, radius, elevation, icons · 5 Layout and breakpoints · 6 Components · 7 Patterns · 8 Accessibility · 9 Do and don't · 10 Token reference</p>
+</section>
+
+<!-- ================= 1 BRAND ================= -->
+<section class="ds-page">
+  <h2 class="ds-h2">1. Brand principles and voice</h2>
+  <p class="ds-lead">NAVIR looks like a calm, clean clinic that speaks like a friendly friend: few elements, plenty of space, one confident blue.</p>
+  <div class="stage dark" style="padding:28px;">
+    <p class="eyebrow" style="color:#c9d8e6;">( navir )</p>
+    <div class="display display-lg" style="color:#eaf2fa;">Simple habit. Own your face.</div>
+    <p style="color:#c9d8e6;margin:8px 0 0;max-width:420px;">Face and body care made for men. Lightweight, non-greasy, and just three steps a day.</p>
+  </div>
+  <table class="ds-table">
+    <tr><th>Principle</th><th>What it means in the product</th></tr>
+    <tr><td><b>Calm</b></td><td>Pale blue-grey background, white cards, navy actions. One strong element per area; no gradients or shadows inside the shop (only on the dark hero).</td></tr>
+    <tr><td><b>Simple</b></td><td>Three steps (Cleanse, Treat, Protect), four quiz questions, one primary button per screen.</td></tr>
+    <tr><td><b>Masculine, not harsh</b></td><td>Navy and steel blue, a serif display face for headings, square-ish corners (10 px).</td></tr>
+    <tr><td><b>Trustworthy</b></td><td>Plain numbers (prices, stock, ratings), verified-buyer reviews, clear order status, no dark patterns.</td></tr>
+    <tr><td><b>Phone first</b></td><td>Big tap targets (46 px primary buttons), one column on phones, nothing scrolls sideways.</td></tr>
+  </table>
+  <h3 class="ds-h3">Voice and writing</h3>
+  <table class="ds-table">
+    <tr><th>Rule</th><th>Example</th></tr>
+    <tr><td>Short, friendly, active. Talk to "you".</td><td>"Not sure where to start? 4 questions, 1 minute."</td></tr>
+    <tr><td>Buttons say the action, in sentence case.</td><td>Add to cart · Place order · Send confirmation · Take the quiz</td></tr>
+    <tr><td>Say what happens next, and why.</td><td>"No online payment yet. Next you'll see the bank transfer details."</td></tr>
+    <tr><td>Errors explain the fix, never blame.</td><td>"Sorry, this product is out of stock." · "Please answer: Shave or beard?"</td></tr>
+    <tr><td>Small labels use <code>( parentheses )</code> in muted text above headings (the "eyebrow").</td><td>( find my routine ) · ( order summary )</td></tr>
+    <tr><td>Money: <code>Rp 159,000</code>. Dates: <code>Nov 14, 2026</code>. No emoji.</td><td>Rp 15,000 · Free</td></tr>
+    <tr><td>Health claims stay general; add a note.</td><td>"This is a general guide, not medical advice."</td></tr>
+  </table>
+</section>
+
+<!-- ================= 2 COLOUR ================= -->
+<section class="ds-page">
+  <h2 class="ds-h2">2. Colour</h2>
+  <p class="ds-lead">A blue-grey neutral base, one navy for action, one steel blue for emphasis, and three status colours. Every colour is a CSS variable.</p>
+
+  <h3 class="ds-h3">Brand and surfaces</h3>
+  <div class="swatches">
+    <div class="swatch"><i style="background:#eef2f6"></i><div><b>--bg</b>#eef2f6<span>Page background</span></div></div>
+    <div class="swatch"><i style="background:#ffffff"></i><div><b>--surface</b>#ffffff<span>Cards, inputs, tables</span></div></div>
+    <div class="swatch"><i style="background:#e3e9f0"></i><div><b>--panel</b>#e3e9f0<span>Product image panel, accordion</span></div></div>
+    <div class="swatch"><i style="background:#d5dde7"></i><div><b>--line</b>#d5dde7<span>Borders and dividers</span></div></div>
+    <div class="swatch"><i style="background:#0b1b2b"></i><div><b style="">--ink</b>#0b1b2b<span>Body text (near-black navy)</span></div></div>
+    <div class="swatch"><i style="background:#5d6d7e"></i><div><b>--muted</b>#5d6d7e<span>Secondary text, hints</span></div></div>
+    <div class="swatch"><i style="background:#0f2a4a"></i><div><b>--navy</b>#0f2a4a<span>Primary button, active tab, logo</span></div></div>
+    <div class="swatch"><i style="background:#1d4f86"></i><div><b>--blue</b>#1d4f86<span>Hover, links, focus</span></div></div>
+    <div class="swatch"><i style="background:#dbe7f3"></i><div><b>--blue-soft</b>#dbe7f3<span>Info alert, demo box, tags</span></div></div>
+  </div>
+
+  <h3 class="ds-h3">Status and data</h3>
+  <div class="swatches">
+    <div class="swatch"><i style="background:#0ca30c"></i><div><b>--good</b>#0ca30c<span>Delivered dot, positive change</span></div></div>
+    <div class="swatch"><i style="background:#e7f5e7"></i><div><b>--good-bg</b>#e7f5e7<span>Delivered pill; text uses --good-text #006300</span></div></div>
+    <div class="swatch"><i style="background:#fab219"></i><div><b>--warning</b>#fab219<span>Pending dot</span></div></div>
+    <div class="swatch"><i style="background:#fff4dc"></i><div><b>--warning-bg</b>#fff4dc<span>Pending pill</span></div></div>
+    <div class="swatch"><i style="background:#d03b3b"></i><div><b>--critical</b>#d03b3b<span>Returned dot, errors</span></div></div>
+    <div class="swatch"><i style="background:#fdecea"></i><div><b>--critical-bg</b>#fdecea<span>Error alert, delete hover; text #b42318 / #8a1c12</span></div></div>
+    <div class="swatch"><i style="background:#2f6aa8"></i><div><b>--chart-1</b>#2f6aa8<span>The one chart series colour</span></div></div>
+    <div class="swatch"><i style="background:#dbe7f3"></i><div><b>--chart-track</b>#dbe7f3<span>Bar and gauge tracks</span></div></div>
+    <div class="swatch"><i style="background:#c98a12"></i><div><b>Star gold</b>#c98a12<span>Rating stars only</span></div></div>
+  </div>
+
+  <h3 class="ds-h3">Dark hero (home page and log-in panel)</h3>
+  <div class="swatches">
+    <div class="swatch"><i style="background:#2f6189"></i><div><b>Hero centre</b>#2f6189<span>Gradient start</span></div></div>
+    <div class="swatch"><i style="background:#173a5a"></i><div><b>Hero mid</b>#173a5a<span>45–55% stop</span></div></div>
+    <div class="swatch"><i style="background:#0b1f33"></i><div><b>Hero edge</b>#0b1f33<span>Gradient end; text #eaf2fa</span></div></div>
+  </div>
+  <p class="cap">Gradient: <code>radial-gradient(ellipse 70% 60% at 50% 38%, #2f6189 0%, #173a5a 45%, #0b1f33 100%)</code>. Used only on the dark hero and the log-in side panel.</p>
+
+  <h3 class="ds-h3 ds-block">Measured contrast (WCAG ratios)</h3>
+  <table class="ds-table ds-block">
+    <tr><th>Pair</th><th>Ratio</th><th>Use</th></tr>
+    <tr><td>--ink on --surface / --bg</td><td>17.4 / 15.5</td><td>All body text (needs 4.5)</td></tr>
+    <tr><td>--muted on --surface / --bg</td><td>5.3 / 4.7</td><td>Hints, secondary text (passes 4.5)</td></tr>
+    <tr><td>White on --navy / --blue</td><td>14.5 / 8.4</td><td>Primary button, hover</td></tr>
+    <tr><td>--navy on --blue-soft</td><td>11.5</td><td>Alerts, tags</td></tr>
+    <tr><td>#b42318 on --critical-bg · #006300 on --good-bg</td><td>5.8 · 6.7</td><td>Error and success text</td></tr>
+    <tr><td>#eaf2fa on hero mid #173a5a</td><td>10.4</td><td>Text on the dark hero</td></tr>
+    <tr><td><b>Star gold on white</b></td><td><b>2.9</b></td><td>Below 3:1, so stars are <b>always shown with the number</b> (4.8 · 12), never alone</td></tr>
+  </table>
+</section>
+
+<!-- ================= 3 TYPE ================= -->
+<section class="ds-page">
+  <h2 class="ds-h2">3. Typography</h2>
+  <p class="ds-lead">A serif for voice (headings, product names, prices), a sans for work (everything you read and click).</p>
+  <div class="cols2 ds-block">
+    <div class="stage"><div class="display display-lg">Instrument Serif</div><p class="cap">Headings, product names, prices, step titles. Weight 400 only, tight line height, letter-spacing -0.01em. CSS: <code>var(--serif)</code>, fallback Georgia.</p></div>
+    <div class="stage"><div style="font:600 32px var(--sans);">Inter</div><p class="cap">Body, buttons, forms, tables, labels. Weights 400, 500, 600. CSS: <code>var(--sans)</code>, fallback system-ui.</p></div>
+  </div>
+
+  <h3 class="ds-h3">Scale</h3>
+  <table class="ds-table">
+    <tr><th>Style</th><th>Class</th><th>Font · size / line</th><th>Used for</th></tr>
+    <tr><td><div class="display" style="font-size:40px;">Display XL</div></td><td><code>.display-xl</code></td><td>Serif · clamp(44px, 6vw, 84px) / 1.02</td><td>Page statements (Contact)</td></tr>
+    <tr><td><div class="display display-lg">Display L</div></td><td><code>.display-lg</code></td><td>Serif · clamp(36px, 4vw, 52px) / 1.02</td><td>Page titles (H1)</td></tr>
+    <tr><td><div class="display display-md">Display M</div></td><td><code>.display-md</code></td><td>Serif · 30px / 1.02</td><td>Section titles, prices, totals</td></tr>
+    <tr><td><div class="card-title">Card title</div></td><td><code>.card-title</code></td><td>Serif · 22px / 1.1</td><td>Product name on cards</td></tr>
+    <tr><td><div class="lead" style="margin:0">Lead text</div></td><td><code>.lead</code></td><td>Sans 400 · 18px / 1.45</td><td>Product description</td></tr>
+    <tr><td>Body text</td><td><i>default</i></td><td>Sans 400 · 15px / 1.5</td><td>Paragraphs, inputs</td></tr>
+    <tr><td><span style="font:500 14px var(--sans)">Button label</span></td><td><code>.btn</code></td><td>Sans 500 · 14px (13px small)</td><td>Buttons</td></tr>
+    <tr><td><span style="font-size:13px">Small / nav link</span></td><td>—</td><td>Sans 400 · 13px</td><td>Navigation, table meta</td></tr>
+    <tr><td><span class="eyebrow">( eyebrow label )</span></td><td><code>.eyebrow</code></td><td>Sans 400 · 12px, +0.02em, muted</td><td>Label above a heading</td></tr>
+    <tr><td><span class="hint">Hint text</span></td><td><code>.hint</code></td><td>Sans 400 · 12px, muted</td><td>Help under fields and totals</td></tr>
+    <tr><td><b style="font-size:28px;letter-spacing:-.01em;">2,644</b></td><td><code>.kpi-value</code></td><td>Sans 600 · 28px / 1.1</td><td>Dashboard numbers</td></tr>
+  </table>
+  <p class="cap">Numbers in tables, totals and quantities use tabular figures (<code>font-variant-numeric: tabular-nums</code>) so digits line up.</p>
+</section>
+
+<!-- ================= 4 SPACING ================= -->
+<section class="ds-page">
+  <h2 class="ds-h2">4. Spacing, radius, elevation and icons</h2>
+  <h3 class="ds-h3">Spacing (px)</h3>
+  <p>The shop uses a loose 4-based scale. Pick the nearest step; do not invent new ones.</p>
+  <div class="row ds-block" style="align-items:flex-end;gap:14px;margin-bottom:10px;">
+    <div class="ico-cell"><div style="width:4px;height:4px;background:var(--navy);margin:0 auto 4px"></div>4</div>
+    <div class="ico-cell"><div style="width:8px;height:8px;background:var(--navy);margin:0 auto 4px"></div>8</div>
+    <div class="ico-cell"><div style="width:12px;height:12px;background:var(--navy);margin:0 auto 4px"></div>12</div>
+    <div class="ico-cell"><div style="width:16px;height:16px;background:var(--navy);margin:0 auto 4px"></div>16</div>
+    <div class="ico-cell"><div style="width:20px;height:20px;background:var(--navy);margin:0 auto 4px"></div>20</div>
+    <div class="ico-cell"><div style="width:24px;height:24px;background:var(--navy);margin:0 auto 4px"></div>24</div>
+    <div class="ico-cell"><div style="width:32px;height:32px;background:var(--navy);margin:0 auto 4px"></div>32</div>
+    <div class="ico-cell"><div style="width:40px;height:40px;background:var(--navy);margin:0 auto 4px"></div>40</div>
+    <div class="ico-cell"><div style="width:56px;height:56px;background:var(--navy);margin:0 auto 4px"></div>56</div>
+  </div>
+  <table class="ds-table">
+    <tr><th>Where</th><th>Value</th></tr>
+    <tr><td>Gap between grid cards, between page blocks</td><td>20 px (cards) · 16 px (blocks) · 56 px between big sections</td></tr>
+    <tr><td>Card inner padding</td><td>20–28 px (24 px typical)</td></tr>
+    <tr><td>Space between a label and its field</td><td>6 px; fields are 16 px apart</td></tr>
+    <tr><td>Space between buttons / chips</td><td>8 px / 6 px</td></tr>
+    <tr><td>Page side padding · max width</td><td>20 px · 1240 px</td></tr>
+  </table>
+
+  <h3 class="ds-h3">Corner radius</h3>
+  <div class="row ds-block" style="gap:16px;margin-bottom:8px;">
+    <div class="ico-cell"><div style="width:64px;height:44px;background:#fff;border:1px solid var(--line);border-radius:6px;margin-bottom:4px"></div>6 chips</div>
+    <div class="ico-cell"><div style="width:64px;height:44px;background:#fff;border:1px solid var(--line);border-radius:8px;margin-bottom:4px"></div>8 inputs, small</div>
+    <div class="ico-cell"><div style="width:64px;height:44px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:4px"></div>10 default</div>
+    <div class="ico-cell"><div style="width:64px;height:44px;background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:4px"></div>14 dashboard</div>
+    <div class="ico-cell"><div style="width:64px;height:44px;background:#fff;border:1px solid var(--line);border-radius:999px;margin-bottom:4px"></div>999 status pill</div>
+  </div>
+  <p class="cap"><code>--radius: 10px</code> is the default for buttons, cards, alerts and tables.</p>
+
+  <h3 class="ds-h3">Elevation</h3>
+  <p>The shop is flat: separation comes from white surfaces on a blue-grey page and 1 px lines. Shadows appear only on things that float.</p>
+  <table class="ds-table">
+    <tr><th>Level</th><th>Shadow</th><th>Used on</th></tr>
+    <tr><td>Flat</td><td>none, 1 px <code>--line</code> border</td><td>Cards, tables, inputs</td></tr>
+    <tr><td>Floating</td><td><code>0 12px 32px rgba(11,27,43,.14)</code></td><td>"Added to cart" popup</td></tr>
+    <tr><td>Menu</td><td><code>0 16px 40px rgba(11,27,43,.16)</code></td><td>Phone menu panel</td></tr>
+    <tr><td>Hero card</td><td><code>0 24px 60px rgba(4,15,28,.35)</code></td><td>Quiz card on the dark hero</td></tr>
+  </table>
+
+  <h3 class="ds-h3 ds-block">Icons</h3>
+  <p>Line icons on a 24 × 24 grid, 2 px stroke, round caps and joins, <code>currentColor</code>. Sizes: 14 (small), 16 (default), 18 (menu button). Used with a text label.</p>
+  <div class="row ds-block" id="icons" style="gap:10px;"></div>
+</section>
+
+<!-- ================= 5 LAYOUT ================= -->
+<section class="ds-page">
+  <h2 class="ds-h2">5. Layout and breakpoints</h2>
+  <p class="ds-lead">Three page shells, one container, two breakpoints.</p>
+  <table class="ds-table">
+    <tr><th>Item</th><th>Value</th></tr>
+    <tr><td>Container</td><td><code>.container</code> max-width 1240 px, centred, 20 px side padding</td></tr>
+    <tr><td>Product grid</td><td><code>.grid</code> 3 equal columns, 20 px gap (2 columns ≤ 900 px, 1 column ≤ 560 px)</td></tr>
+    <tr><td>Two-column pages</td><td><code>.split</code> (cart 1.6 : 1, checkout 1.4 : 1, product 1.55 : 1) collapses to one column ≤ 900 px</td></tr>
+    <tr><td>Form width</td><td>Cards max 640 px; <code>.row-2</code> puts two fields side by side (one column ≤ 560 px)</td></tr>
+    <tr><td>Admin shell</td><td>Sidebar 252 px + content (content padding 28 / 32 px; 20 / 16 px on phones)</td></tr>
+    <tr><td>Log-in shell</td><td>50 / 50 split: navy panel with product photo, form on the right (stacked ≤ 900 px)</td></tr>
+  </table>
+  <h3 class="ds-h3">Breakpoints</h3>
+  <table class="ds-table">
+    <tr><th>Range</th><th>Name</th><th>What changes</th></tr>
+    <tr><td>&gt; 900 px</td><td>Desktop</td><td>Full top bar (Shop, Find my routine, About, Contact, account links); 3-column grid; admin sidebar open; floating quiz card on the hero</td></tr>
+    <tr><td>≤ 900 px</td><td>Phone and tablet</td><td>Top bar = logo, Cart, ☰ button (menu panel); admin sidebar folds behind ☰; columns stack; sort and category filters become one swipeable row; quiz card sits under the hero</td></tr>
+    <tr><td>≤ 560 px</td><td>Small phone</td><td>Grid and two-field rows become one column</td></tr>
+  </table>
+  <p class="cap">Design and test at <b>375 px</b> wide first. No page may scroll sideways.</p>
+  <div class="cols3 ds-block">
+    <div><div class="stage" style="height:90px;position:relative;"><div style="position:absolute;left:12px;top:12px;width:30%;height:66px;background:#fff;border-radius:6px"></div><div style="position:absolute;left:36%;top:12px;right:12px;height:66px;background:#fff;border-radius:6px"></div></div><p class="cap">Admin: sidebar + content</p></div>
+    <div><div class="stage" style="height:90px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"><div style="background:#fff;border-radius:6px"></div><div style="background:#fff;border-radius:6px"></div><div style="background:#fff;border-radius:6px"></div></div><p class="cap">Shop: 3-column grid</p></div>
+    <div><div class="stage" style="height:90px;display:grid;grid-template-rows:repeat(3,1fr);gap:6px;width:60%"><div style="background:#fff;border-radius:6px"></div><div style="background:#fff;border-radius:6px"></div><div style="background:#fff;border-radius:6px"></div></div><p class="cap">Phone: one column</p></div>
+  </div>
+</section>
+
+<!-- ================= 6 COMPONENTS ================= -->
+<section class="ds-page">
+  <h2 class="ds-h2">6. Components</h2>
+  <p class="ds-lead">Each component shows the real markup classes, its states and when to use it.</p>
+
+  <h3 class="ds-h3">6.1 Buttons</h3>
+  <div class="stage ds-block">
+    <div class="row">
+      <a class="btn">Primary</a>
+      <a class="btn btn-ghost">Secondary</a>
+      <a class="btn btn-danger">Danger</a>
+      <a class="btn btn-sm">Small primary</a>
+      <a class="btn btn-ghost btn-sm">Small secondary</a>
+      <button class="btn" disabled style="opacity:.5;cursor:not-allowed">Out of stock</button>
+    </div>
+  </div>
+  <table class="ds-table ds-block">
+    <tr><th>Variant</th><th>Class</th><th>Spec</th><th>Use</th></tr>
+    <tr><td>Primary</td><td><code>.btn</code></td><td>46 px high, 26 px side padding, navy fill, white text, radius 10; hover <code>--blue</code></td><td>The one main action per area (Add to cart, Place order)</td></tr>
+    <tr><td>Secondary</td><td><code>.btn .btn-ghost</code></td><td>Transparent, 1 px <code>--line</code> border, navy text; hover white fill + navy border</td><td>Alternative or back actions (Continue shopping, Retake the quiz)</td></tr>
+    <tr><td>Danger</td><td><code>.btn .btn-danger</code></td><td>Red text, pale red border; hover pale red fill</td><td>Delete, always behind a "Yes, delete" confirmation</td></tr>
+    <tr><td>Small</td><td><code>.btn-sm</code></td><td>34 px high, 13 px text</td><td>Inside tables, cards and rows</td></tr>
+    <tr><td>Disabled</td><td><code>disabled</code></td><td>50% opacity, no pointer cursor</td><td>Unavailable (Out of stock)</td></tr>
+  </table>
+  <p class="cap">Focus: browsers' default focus ring is kept; custom controls (star picker, quiz options) use a 2 px <code>--blue</code> outline with 2 px offset.</p>
+
+  <h3 class="ds-h3">6.2 Chips, tabs and filters</h3>
+  <div class="stage ds-block">
+    <div class="chips" style="margin-bottom:12px;"><span class="chip active">Serums 3</span><span class="chip">Cleansers 2</span><span class="chip">Oily</span><a class="chip">Clear search ×</a></div>
+    <div class="toolbar" style="margin:0;">
+      <div class="tabs"><a class="active">Newest</a><a>Price: low to high</a><a>Top rated</a></div>
+      <div class="cat-links"><a class="active">All</a><a>Body Care <span class="muted">2</span></a><a>Serums <span class="muted">3</span></a></div>
+    </div>
+  </div>
+  <p class="cap">Chip: 28 px high, 12 px text, radius 6; active = navy fill. Tabs: 9 × 18 px padding, radius 10, active = navy fill. Category links are text-only; the active one is bold and ink-coloured. On phones tabs and links scroll sideways inside their own row.</p>
+</section>
+
+<section class="ds-page">
+  <h3 class="ds-h3" style="margin-top:0">6.3 Form fields</h3>
+  <div class="stage ds-block">
+    <div class="form-card" style="max-width:none;">
+      <div class="row-2">
+        <div class="field"><label>Recipient name</label><input value="Budi Santoso"></div>
+        <div class="field"><label>Phone / WhatsApp</label><input placeholder="0812 3456 7890"></div>
+      </div>
+      <div class="field"><label>Full address</label><textarea placeholder="Street, number, district, city, postal code"></textarea></div>
+      <div class="field"><label>Email (read-only)</label><input value="budi@example.com" readonly style="color:var(--muted)"></div>
+    </div>
+  </div>
+  <div class="cols2 ds-block">
+    <div class="stage">
+      <div class="eyebrow" style="margin-bottom:6px">Quantity stepper</div>
+      <div class="qty"><button type="button">−</button><span>2</span><button type="button">+</button></div>
+      <div class="eyebrow" style="margin:12px 0 6px">Select (role)</div>
+      <select class="role-select"><option>User</option></select>
+      <div class="eyebrow" style="margin:12px 0 6px">Search</div>
+      <label class="side-search shop-search"><span class="ico-s" data-n="search"></span><input placeholder="Search products..."></label>
+    </div>
+    <div class="stage">
+      <div class="eyebrow" style="margin-bottom:6px">Star picker (pick 1–5)</div>
+      <fieldset class="star-input"><input type="radio" id="r5" name="r"><label for="r5">★</label><input type="radio" id="r4" name="r" checked><label for="r4">★</label><input type="radio" id="r3" name="r"><label for="r3">★</label><input type="radio" id="r2" name="r"><label for="r2">★</label><input type="radio" id="r1" name="r"><label for="r1">★</label></fieldset>
+      <div class="eyebrow" style="margin:12px 0 6px">Option cards (quiz)</div>
+      <div class="routine-options" style="grid-template-columns:1fr 1fr;"><label class="routine-option"><input type="radio" name="q" checked><span>Oily</span></label><label class="routine-option"><input type="radio" name="q"><span>Dry</span></label></div>
+    </div>
+  </div>
+  <table class="ds-table ds-block">
+    <tr><th>Element</th><th>Spec</th></tr>
+    <tr><td>Label</td><td>Above the field, 12 px, muted, 6 px gap. Never use placeholder text as the only label.</td></tr>
+    <tr><td>Input, textarea</td><td>Full width, 11 × 12 px padding, 1 px <code>--line</code> border, radius 8, background <code>--bg</code>. Focus: white fill, <code>--blue</code> border, 2 px <code>--blue-soft</code> ring. Textarea min height 110 px.</td></tr>
+    <tr><td>Quantity stepper</td><td>46 px high (34 px small), bordered, − and + buttons 40 px wide; + disabled at the stock limit.</td></tr>
+    <tr><td>Validation</td><td>Error summary in a red alert at the top; field-level hints in 12 px <code>#b42318</code>. Server messages are written as plain sentences.</td></tr>
+  </table>
+
+  <h3 class="ds-h3">6.4 Feedback: alerts, toast, status</h3>
+  <div class="stage ds-block">
+    <div class="alert">Order <b>NVR-7KQ2M9XA</b> saved. One more step: send us the form below so we can confirm it.</div>
+    <div class="alert alert-error">Please answer: Shave or beard?</div>
+    <div class="row" style="margin-top:4px;">
+      <span class="pill-status pending">Pending</span><span class="pill-status processing">Processing</span><span class="pill-status shipped">Shipped</span><span class="pill-status delivered">Delivered</span><span class="pill-status returned">Returned</span>
+      <span class="tag">Verified buyer</span><span class="tag">you</span>
+    </div>
+    <div class="toast" style="position:static;margin-top:12px;max-width:430px;">
+      <div class="visual" style="background:var(--panel)"></div>
+      <div><div style="font-weight:600;font-size:13px;">Added to cart</div><div class="hint">Niacinamide 10% Serum 30ml × 2</div></div>
+      <a class="btn btn-sm">View cart</a>
+    </div>
+  </div>
+  <table class="ds-table ds-block">
+    <tr><th>Element</th><th>Spec</th><th>Use</th></tr>
+    <tr><td>Info alert</td><td><code>.alert</code> · <code>--blue-soft</code> fill, navy text, radius 10, 12 × 16 px</td><td>Success and neutral messages at the top of a page</td></tr>
+    <tr><td>Error alert</td><td><code>.alert-error</code> · <code>#fdecea</code> fill, <code>#8a1c12</code> text</td><td>Validation and blocked actions</td></tr>
+    <tr><td>Status pill</td><td><code>.pill-status.&lt;status&gt;</code> · 12 px, radius 999, coloured dot + tinted fill</td><td>Order status: pending (amber), processing and shipped (blue), delivered (green), returned (red). Colour is never the only cue: the word is always shown.</td></tr>
+    <tr><td>Tag</td><td><code>.tag</code> · 11 px, <code>--blue-soft</code>, radius 999</td><td>Small facts: "Verified buyer", "you", "filled in automatically"</td></tr>
+    <tr><td>Toast</td><td><code>.toast</code> · fixed bottom right, white, radius 10, floating shadow, slides in; removes itself after 5 s</td><td>Confirms "Added to cart" with a "View cart" action</td></tr>
+  </table>
+</section>
+
+<section class="ds-page">
+  <h3 class="ds-h3" style="margin-top:0">6.5 Product card, photo and rating</h3>
+  <div class="stage ds-block">
+    <div class="row" style="align-items:flex-start;gap:16px;">
+      <div class="card-demo"><a class="card"><div class="visual"><img src="http://localhost:8080/navir/public/uploads/products/demo/5.jpeg" style="width:100%;height:100%;object-fit:cover"></div><div class="card-body"><div><div class="eyebrow">Serums</div><h3 class="card-title">Niacinamide 10% Serum 30ml</h3><div class="card-rating"><span class="stars" style="font-size:13px"><span class="stars-empty">★★★★★</span><span class="stars-full" style="width:86%">★★★★★</span></span><span>4.3 · 3</span></div></div><div class="card-price">Rp 159,000</div></div></a><p class="cap">Product card</p></div>
+      <div class="card-demo"><a class="card"><div class="visual"><div class="pv-empty"><span class="pv-empty__initial">V</span><span class="pv-empty__name">Vitamin C Bright Serum</span><span class="pv-empty__size">30 ml</span><span class="pv-empty__note">No photo yet</span></div></div><div class="card-body"><div><div class="eyebrow">Serums</div><h3 class="card-title">Vitamin C Bright Serum 30ml</h3></div><div class="card-price">Rp 169,000</div></div></a><p class="cap">Without a photo (placeholder) and no reviews yet</p></div>
+    </div>
+  </div>
+  <table class="ds-table ds-block">
+    <tr><th>Element</th><th>Spec</th></tr>
+    <tr><td>Card</td><td>Whole card is the link. Photo panel ratio 4 : 5 on <code>--panel</code>, radius 10, lifts 3 px on hover; below it: category (eyebrow), name (serif 22), optional rating row, price (serif 22, right).</td></tr>
+    <tr><td>Photo</td><td>Studio shot on a pale blue-grey background, product centred, <code>object-fit: cover</code>. Without a photo: initial, name, size and "No photo yet" on the same panel.</td></tr>
+    <tr><td>Stars</td><td><code>&lt;x-stars rating size&gt;</code>: grey stars with gold stars on top, cut to the rating width (4.3 = 86%). Always followed by "average · count".</td></tr>
+  </table>
+
+  <h3 class="ds-h3">6.6 Cart, steps and order tracker</h3>
+  <div class="stage ds-block">
+    <ol class="steps"><li class="done"><span class="n">✓</span>Cart</li><li class="on"><span class="n">2</span>Checkout</li><li><span class="n">3</span>Payment</li></ol>
+    <div class="pill">
+      <div class="cart-item"><div class="visual cart-thumb"><img src="http://localhost:8080/navir/public/uploads/products/demo/01.jpeg" style="width:100%;height:100%;object-fit:cover"></div><div><div class="eyebrow">Cleansers</div><div class="name">Charcoal Deep Face Wash 100ml</div><div class="hint">Rp 89,000 each</div></div><div class="qty sm"><button>−</button><span>2</span><button>+</button></div><div class="line-total">Rp 178,000</div><button class="remove-btn">×</button></div>
+    </div>
+    <div class="pill summary" style="padding:18px;margin-top:10px;max-width:300px;">
+      <p class="eyebrow">( order summary )</p>
+      <div class="row" style="justify-content:space-between;font-size:14px;margin:4px 0"><span>Subtotal (2 items)</span><span>Rp 178,000</span></div>
+      <div class="row" style="justify-content:space-between;font-size:14px;margin:4px 0"><span>Shipping</span><span>Rp 15,000</span></div>
+      <div class="hint">Add Rp 22,000 more for free shipping</div><div class="ship-bar"><i style="width:89%"></i></div>
+      <hr class="rule" style="margin:12px 0"><div class="row" style="justify-content:space-between"><span class="display display-md">Total</span><span class="display display-md">Rp 193,000</span></div>
+    </div>
+    <p class="eyebrow" style="margin:14px 0 6px">Order tracker (My orders)</p>
+    <ol class="steps" style="margin:0"><li class="done"><span class="n">✓</span>Order placed</li><li class="done"><span class="n">✓</span>Processing</li><li class="on"><span class="n">3</span>Shipped</li><li><span class="n">4</span>Delivered</li></ol>
+  </div>
+  <p class="cap">Steps: done = navy circle with ✓, current = navy circle + bold navy label, upcoming = outlined circle in muted text; a 28 px line joins steps. The current step carries <code>aria-current="step"</code>. Free-shipping bar: 4 px, <code>--blue</code> on <code>--bg</code>.</p>
+</section>
+
+<section class="ds-page">
+  <h3 class="ds-h3" style="margin-top:0">6.7 Tables, lists and pagination</h3>
+  <div class="stage ds-block">
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="num"><b>NVR-7KQ2M9XA</b></td><td>Budi Santoso<div class="hint">budi@example.com</div></td><td class="num">Rp 193,000</td><td><span class="pill-status shipped">Shipped</span></td></tr>
+        <tr><td class="num"><b>NVR-3HD81PZW</b></td><td>Sari Dewi<div class="hint">sari@example.com</div></td><td class="num">Rp 104,000</td><td><span class="pill-status pending">Pending</span></td></tr>
+      </tbody></table></div>
+    <ul class="pagination" style="margin:14px 0 0"><li class="page-item disabled"><span class="page-link">‹</span></li><li class="page-item active"><span class="page-link">1</span></li><li class="page-item"><span class="page-link">2</span></li><li class="page-item"><span class="page-link">3</span></li><li class="page-item"><span class="page-link">›</span></li></ul>
+  </div>
+  <p class="cap">Table: white, radius 10, 14 × 16 px cells, 12 px muted uppercase-free headers, row dividers in <code>--line</code>, subtle row hover; wide tables scroll sideways inside <code>.table-wrap</code> only. Numbers are right-aligned or tabular. Pagination: 36 px squares, active = navy.</p>
+
+  <h3 class="ds-h3">6.8 Navigation</h3>
+  <div class="stage dark ds-block" style="padding:12px;">
+    <header class="site-header"><nav class="container nav"><div class="nav-group"><a class="brand"><svg viewBox="0 0 24 24" class="brand-mark"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 7 V17 M7.5 9.5 L16.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>NAVIR</a><span class="nav-links" style="display:flex;gap:2px"><a class="active" style="background:rgba(255,255,255,.1)">Shop</a><a>Find my routine</a><a>About</a><a>Contact</a></span></div><div class="nav-group"><a>Cart <span class="count">2</span></a><a>Log in</a><a>Sign up</a></div></nav></header>
+  </div>
+  <p class="cap">Desktop top bar (shown on the dark hero; on other pages the groups are white on <code>--bg</code>). Link: 13 px, 7 × 12 px padding, radius 7; active = tinted fill + bold. Cart shows a count badge.</p>
+  <div class="cols2 ds-block">
+    <div class="phone"><header class="site-header"><nav class="container nav"><div class="nav-group"><a class="brand"><svg viewBox="0 0 24 24" class="brand-mark"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 7 V17 M7.5 9.5 L16.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>NAVIR</a></div><div class="nav-group"><a>Cart <span class="count">2</span></a><button class="menu-btn" style="display:inline-flex">✕</button></div></nav></header>
+      <div class="mobile-menu"><div class="mobile-menu-card"><a class="active">Shop</a><a>Find my routine</a><a>About</a><a>Contact</a><hr><a>Log in</a><a>Sign up</a></div></div></div>
+    <div><p style="margin-top:0"><b>Phone menu</b> (≤ 900 px): logo, Cart and a ☰ button (✕ when open). The panel lists the page links, a divider, then the account links; Escape closes it. The same ☰ folds the admin sidebar.</p><p><span class="back-link">← All products</span></p><p class="cap">Back link: 34 px, bordered, radius 8, placed above the product title.</p></div>
+  </div>
+</section>
+
+<section class="ds-page">
+  <h3 class="ds-h3" style="margin-top:0">6.9 Admin: sidebar, KPI, cards and user row</h3>
+  <div class="cols2 ds-block" style="align-items:start;">
+    <div class="stage" style="padding:10px;"><aside class="sidebar" style="padding:16px 12px;width:auto;">
+      <div class="side-top"><a class="brand" style="padding:4px 10px;text-decoration:none;color:var(--ink)"><svg viewBox="0 0 24 24" class="brand-mark"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 7 V17 M7.5 9.5 L16.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>NAVIR <span class="muted" style="font-weight:400">Admin</span></a></div>
+      <nav class="side-nav"><a class="active"><span class="ico-s" data-n="grid"></span> Dashboard</a><a><span class="ico-s" data-n="bag"></span> Orders <span class="badge">3</span></a><a><span class="ico-s" data-n="box"></span> Products <span class="badge">13</span></a><a><span class="ico-s" data-n="tag"></span> Product Categories <span class="badge">7</span></a><a><span class="ico-s" data-n="users"></span> User Management <span class="badge">42</span></a><a><span class="ico-s" data-n="user"></span> Profile</a></nav>
+    </aside></div>
+    <div>
+      <div class="stage" style="padding:10px;"><div class="kpi-strip" style="grid-template-columns:1fr 1fr;"><div class="kpi"><div class="kpi-top"><span class="kpi-icon"><span class="ico-s" data-n="bag" data-s="15"></span></span><span class="kpi-name">Orders</span></div><div class="kpi-value-row"><div class="kpi-value">83</div></div><div class="kpi-note">vs prev. 30 days</div></div><div class="kpi" style="border-right:0"><div class="kpi-top"><span class="kpi-icon"><span class="ico-s" data-n="chart" data-s="15"></span></span><span class="kpi-name">Revenue</span></div><div class="kpi-value-row"><div class="kpi-value">Rp 12.7M</div></div><div class="kpi-note">vs prev. 30 days</div></div></div></div>
+      <p class="cap">KPI strip: white, radius 14; label + 28 px icon chip, 28 px / 600 value, 11 px note.</p>
+      <div class="stage" style="padding:10px;"><div class="user-filters"><label class="side-search user-search" style="flex:1"><span class="ico-s" data-n="search"></span><input placeholder="Search by name or email..."></label><select class="role-select"><option>All roles</option></select></div></div>
+    </div>
+  </div>
+  <div class="stage ds-block">
+    <div class="table-wrap"><table class="table users-table"><thead><tr><th>Name ↑</th><th>Email</th><th>Role</th><th></th></tr></thead><tbody>
+      <tr><td><div class="row" style="flex-wrap:nowrap"><span class="avatar avatar-sm">AM</span><b>Adinda Melati</b></div></td><td class="muted">adinda@example.com</td><td><select class="role-select"><option>User</option></select></td><td><span class="trash-btn"><span class="ico-s" data-n="trash"></span></span></td></tr>
+      <tr><td><div class="row" style="flex-wrap:nowrap"><span class="avatar avatar-sm">TU</span><b>Test User</b> <span class="tag">you</span></div></td><td class="muted">test@example.com</td><td><span class="role-select is-static">System Admin</span></td><td></td></tr>
+    </tbody></table></div>
+  </div>
+  <table class="ds-table ds-block">
+    <tr><th>Element</th><th>Spec</th></tr>
+    <tr><td>Sidebar</td><td>252 px, white, 20 × 14 px padding. Item: 9 × 10 px, radius 8, icon + label + optional count badge; active = navy fill, white text. Shows only what the role may open.</td></tr>
+    <tr><td>Page head</td><td>( dashboard ) eyebrow, serif H1, primary action on the right.</td></tr>
+    <tr><td>Role select</td><td>38 px high, radius 8, custom chevron, min width 150 px. Saves immediately; your own row is static (grey) with no delete icon.</td></tr>
+    <tr><td>Delete</td><td>Icon button (34 px, radius 8) → turns into a red "Yes, delete" button in place. No modal.</td></tr>
+    <tr><td>Demo notice</td><td>Info alert at the top of admin pages for demo accounts; a red alert replaces it when a save was blocked.</td></tr>
+  </table>
+</section>
+
+<section class="ds-page">
+  <h3 class="ds-h3" style="margin-top:0">6.10 Reviews and the routine quiz</h3>
+  <div class="cols2 ds-block" style="align-items:start;">
+    <div class="pill" style="padding:18px;">
+      <div class="row" style="flex-wrap:nowrap;gap:12px"><span class="display display-lg">4.3</span><div><span class="stars" style="font-size:18px"><span class="stars-empty">★★★★★</span><span class="stars-full" style="width:86%">★★★★★</span></span><div class="hint">3 reviews</div></div></div>
+      <div style="margin-top:10px"><div class="rating-bar"><span>5 ★</span><span class="track"><span style="width:60%"></span></span><span class="hint">2</span></div><div class="rating-bar"><span>4 ★</span><span class="track"><span style="width:30%"></span></span><span class="hint">1</span></div><div class="rating-bar"><span>3 ★</span><span class="track"><span style="width:0"></span></span><span class="hint">0</span></div></div>
+    </div>
+    <div class="pill"><article class="review"><span class="stars" style="font-size:14px"><span class="stars-empty">★★★★★</span><span class="stars-full" style="width:100%">★★★★★</span></span><div style="font-weight:600;margin-top:4px">Budi S. <span class="tag">Verified buyer</span></div><p style="margin:6px 0 0;font-size:13px">Light, absorbs fast and no greasy feeling.</p></article></div>
+  </div>
+  <div class="stage ds-block">
+    <div class="routine-steps" style="grid-template-columns:repeat(2,1fr);">
+      <div class="pill routine-step"><div class="routine-step-head"><span class="routine-n">1</span><div><div class="display display-md">Cleanse</div><div class="hint">Morning and night</div></div></div>
+        <div class="routine-item"><div class="visual"><img src="http://localhost:8080/navir/public/uploads/products/demo/2.jpeg" style="width:100%;height:100%;object-fit:cover"></div><div><span class="routine-item-name">Oil Control Gel Cleanser 150ml</span><p class="hint" style="margin:2px 0 6px">Salicylic acid clears extra oil and keeps pores from clogging.</p><div class="row"><b>Rp 99,000</b><a class="btn btn-ghost btn-sm">Add to cart</a></div></div></div></div>
+      <div class="pill routine-buy" style="margin:0"><div><div class="hint">4 products · full routine</div><div class="display display-md">Rp 506,000</div></div><a class="btn">Add the whole routine to cart</a></div>
+    </div>
+  </div>
+  <table class="ds-table ds-block">
+    <tr><th>Element</th><th>Spec</th></tr>
+    <tr><td>Review</td><td>Stars, shortened name ("Budi S."), "Verified buyer" tag, date on the right, comment 14 px; remove button only for the author or an admin.</td></tr>
+    <tr><td>Rating summary</td><td>Large serif average, stars with count, five thin bars (gold on <code>--chart-track</code>).</td></tr>
+    <tr><td>Quiz question</td><td>White card, numbered navy circle, serif question; answers are full-width option cards: bordered, selected = navy fill + white text.</td></tr>
+    <tr><td>Routine step</td><td>Numbered circle, serif step name, "when" hint, then one or more product rows (72 × 90 photo, name, reason, price, small button). A white summary bar below holds the total and the main button.</td></tr>
+  </table>
+</section>
+
+<!-- ================= 7 PATTERNS ================= -->
+<section class="ds-page">
+  <h2 class="ds-h2">7. Patterns</h2>
+  <p class="ds-lead">How components combine for the situations every page meets.</p>
+  <h3 class="ds-h3">Empty states</h3>
+  <div class="stage cols2 ds-block">
+    <div class="pill" style="padding:22px;text-align:center;"><div class="display display-md">Your cart is empty.</div><p class="muted">Start with a cleanser, step one of your daily routine.</p><a class="btn">Shop now</a></div>
+    <div class="pill" style="padding:22px;text-align:center;"><div class="display display-md">No orders yet.</div><p class="muted">When you place an order, you can follow it here.</p><a class="btn">Shop now</a></div>
+  </div>
+  <p class="cap">Empty state = white card, serif sentence, one muted line that says what to do, one primary button. For a search with no result use a muted sentence with a link: "Nothing matches “shampoo”. Try another word, or see all products."</p>
+
+  <h3 class="ds-h3">Two-step delete</h3>
+  <div class="stage ds-block"><div class="row"><span class="btn btn-danger btn-sm">Delete</span><span class="cap">then, in the same place:</span><span class="btn btn-danger btn-sm">Yes, delete</span></div></div>
+  <p class="cap">Destructive actions never happen on the first click. The button turns into a confirmation in place (no modal) and the result is reported in an alert.</p>
+
+  <h3 class="ds-h3">Guest to customer</h3>
+  <p>Anyone can browse and fill the cart. An account is requested only at checkout; after log in or sign up the visitor returns to checkout with the cart intact. Never ask for an account before the visitor has a reason to give one.</p>
+
+  <h3 class="ds-h3">Forms</h3>
+  <ul>
+    <li>Pre-fill what we know (name, email) and show read-only values as plain muted text.</li>
+    <li>One column on phones; two short fields may share a row on desktop.</li>
+    <li>Validate on the server; show one red alert at the top and keep what the user typed.</li>
+    <li>The page's single primary button is the full-width last element of the form.</li>
+  </ul>
+
+  <h3 class="ds-h3">Feedback after an action</h3>
+  <table class="ds-table ds-block">
+    <tr><th>Action</th><th>Feedback</th></tr>
+    <tr><td>Add to cart</td><td>Toast with "View cart" and the cart count in the top bar updates</td></tr>
+    <tr><td>Save, update, delete in admin</td><td>Info alert at the top: "Order NVR-… is now Shipped."</td></tr>
+    <tr><td>Blocked by role or demo mode</td><td>403 page for a missing role; red alert explaining demo mode</td></tr>
+    <tr><td>Place order</td><td>Move to the next step (Payment), never leave the user on the same page</td></tr>
+  </table>
+</section>
+
+<!-- ================= 8-9 ================= -->
+<section class="ds-page">
+  <h2 class="ds-h2">8. Accessibility</h2>
+  <table class="ds-table">
+    <tr><th>Rule</th><th>How the shop does it</th></tr>
+    <tr><td>Contrast</td><td>Body text 15:1 or better; secondary text at least 4.7:1; white on navy 14.5:1 (section 2). Gold stars (2.9:1) are always paired with a number.</td></tr>
+    <tr><td>Never colour alone</td><td>Status pills carry the word; steps carry numbers and ✓; errors carry text.</td></tr>
+    <tr><td>Labels</td><td>Every input has a visible label; icon-only buttons have <code>aria-label</code> (Open menu, Remove, Log out); decorative icons are <code>aria-hidden</code>.</td></tr>
+    <tr><td>Keyboard</td><td>All controls are reachable by Tab; Escape closes the phone menu; the star picker and quiz options are real radio inputs with a visible focus outline.</td></tr>
+    <tr><td>Structure</td><td>One H1 per page, then headings in order; the main menu is a <code>nav</code> with a label; the current step uses <code>aria-current</code>.</td></tr>
+    <tr><td>Touch</td><td>Primary buttons 46 px, small buttons 34 px, tap rows 52 px; at least 8 px between tap targets.</td></tr>
+    <tr><td>Images</td><td>Product photos have the product name as alt text; decorative images have none.</td></tr>
+    <tr><td>Motion</td><td>Only small slide and fade effects (about 0.25 s). Nothing flashes or auto-plays.</td></tr>
+    <tr><td>Zoom and reflow</td><td>Layout works at 375 px and when text is enlarged; no sideways scrolling.</td></tr>
+  </table>
+
+  <h2 class="ds-h2" style="margin-top:24px">9. Do and don't</h2>
+  <div class="cols2 ds-block">
+    <div class="do"><b>Do</b><ul style="margin-top:6px"><li>Use <code>--navy</code> for the one main action on a page.</li><li>Keep white cards on the <code>--bg</code> page.</li><li>Use the serif for names, prices and headings only.</li><li>Show status as a word plus colour.</li><li>Say what will happen next, in a short sentence.</li><li>Test every page at 375 px wide.</li><li>Confirm destructive actions in place.</li></ul></div>
+    <div class="dont"><b>Don't</b><ul style="margin-top:6px"><li>Put two primary buttons side by side.</li><li>Add new colours; map to a token or a status colour.</li><li>Use the serif for long text or small labels.</li><li>Rely on colour (or gold stars) alone.</li><li>Use a placeholder as the only label.</li><li>Add shadows or gradients inside the shop.</li><li>Hide an important link only on phones without a replacement.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= 10 TOKENS ================= -->
+<section class="ds-page">
+  <h2 class="ds-h2">10. Token reference</h2>
+  <p class="ds-lead">Copy this block to start a new project in the NAVIR style. Everything in this document derives from these values.</p>
+<pre>:root {
+  /* surfaces and text */
+  --bg: #eef2f6;  --surface: #ffffff;  --panel: #e3e9f0;  --line: #d5dde7;
+  --ink: #0b1b2b; --muted: #5d6d7e;
+  /* brand */
+  --navy: #0f2a4a; --blue: #1d4f86; --blue-soft: #dbe7f3;
+  /* shape and type */
+  --radius: 10px;
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* data and status */
+  --chart-1: #2f6aa8; --chart-track: #dbe7f3; --chart-grid: #e6ebf1;
+  --good: #0ca30c;     --good-text: #006300;     --good-bg: #e7f5e7;
+  --warning: #fab219;  --warning-bg: #fff4dc;
+  --critical: #d03b3b; --critical-text: #b42318; --critical-bg: #fdecea;
+}
+/* extras used in components */
+star gold: #c98a12 · dark hero text: #eaf2fa · error alert text: #8a1c12
+hero gradient: radial-gradient(ellipse 70% 60% at 50% 38%, #2f6189 0%, #173a5a 45%, #0b1f33 100%)
+base: body 15px/1.5 var(--sans), color var(--ink), background var(--bg)
+breakpoints: 900px (phone and tablet), 560px (small phone); container 1240px</pre>
+
+  <h3 class="ds-h3">Component class index</h3>
+  <table class="ds-table">
+    <tr><th>Area</th><th>Classes</th></tr>
+    <tr><td>Type</td><td><code>.display .display-xl .display-lg .display-md .eyebrow .muted .lead .hint .card-title</code></td></tr>
+    <tr><td>Actions</td><td><code>.btn .btn-ghost .btn-sm .btn-danger .back-link .menu-btn</code></td></tr>
+    <tr><td>Filters</td><td><code>.chips .chip .chip.active .toolbar .tabs .cat-links .shop-search</code></td></tr>
+    <tr><td>Forms</td><td><code>.field .row-2 .form-card .qty .qty.sm .star-input .routine-option .role-select .side-search</code></td></tr>
+    <tr><td>Feedback</td><td><code>.alert .alert-error .toast .tag .pill-status.{pending|processing|shipped|delivered|returned} .badge</code></td></tr>
+    <tr><td>Commerce</td><td><code>.card .visual .pv-empty .stars .card-rating .cart-item .summary .ship-bar .steps .pay-box .order-row .mini-item</code></td></tr>
+    <tr><td>Content</td><td><code>.pill (white card) .table .table-wrap .pagination .review .rating-bar .routine-step .routine-item .routine-buy .accordion .spec</code></td></tr>
+    <tr><td>Admin</td><td><code>.admin .sidebar .side-nav .side-user .avatar .kpi-strip .kpi .dash-card .card-head .page-head .user-filters .trash-btn</code></td></tr>
+    <tr><td>Navigation</td><td><code>.site-header .nav .nav-group .nav-links .nav-account .brand .count .mobile-menu .mobile-menu-card .site-footer</code></td></tr>
+  </table>
+  <p class="cap">All classes live in one file, <code>resources/views/layouts/partials/styles.blade.php</code>. Reusable Blade components: <code>x-product-card, x-product-visual, x-stars, x-checkout-steps, x-routine-item, x-icon, x-navbar, x-footer, x-admin-layout</code>.</p>
+</section>
+
+</div>
+<script>
+// Icons (same paths as resources/views/components/icon.blade.php)
+var P = {
+ grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+ box:'<path d="M21 8 12 3 3 8v8l9 5 9-5V8Z"/><path d="m3 8 9 5 9-5M12 13v8"/>',
+ tag:'<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+ cursor:'<path d="m4 4 7 17 2.5-7.5L21 11 4 4Z"/>',
+ bag:'<path d="M5 8h14l-1 13H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+ chart:'<path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/>',
+ alert:'<path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/>',
+ external:'<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ logout:'<path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4"/><path d="M10 17l5-5-5-5M15 12H4"/>',
+ up:'<path d="M7 17 17 7M8 7h9v9"/>',
+ down:'<path d="M7 7l10 10M17 8v9H8"/>',
+ check:'<path d="m5 12 5 5 9-10"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>',
+ trash:'<path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'
+};
+function svg(n, s){ return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+P[n]+'</svg>'; }
+document.querySelectorAll('.ico-s').forEach(function(e){ e.innerHTML = svg(e.dataset.n, +(e.dataset.s||16)); e.style.display='inline-flex'; });
+var box = document.getElementById('icons');
+Object.keys(P).forEach(function(n){ var d=document.createElement('div'); d.className='ico-cell'; d.innerHTML='<div class="ico">'+svg(n,18)+'</div>'+n; box.appendChild(d); });
+</script>
+</body>
+</html>
