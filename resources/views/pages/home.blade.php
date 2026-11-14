@@ -32,7 +32,7 @@
             </a>
         @endif
 
-        <h1 class="hero-title">Because your skin deserves better.</h1>
+        <h1 class="hero-title">Simple habit. Own your face.</h1>
 
         <div class="hero-bottom">
             <div class="container">
