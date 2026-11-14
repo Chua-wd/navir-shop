@@ -33,14 +33,20 @@
 </head>
 <body>
     <div class="admin">
-        <aside class="sidebar">
-            <a href="{{ $user->isAdmin() ? route('dashboard') : url('/') }}" class="brand" style="padding: 4px 10px; text-decoration: none; color: var(--ink);">
-                <x-application-logo class="brand-mark" />
-                NAVIR
-                @if ($user->isAdmin())
-                    <span class="muted" style="font-weight: 400; letter-spacing: 0;">Admin</span>
-                @endif
-            </a>
+        <aside class="sidebar" id="sidebar">
+            <div class="side-top">
+                <a href="{{ $user->isAdmin() ? route('dashboard') : url('/') }}" class="brand" style="padding: 4px 10px; text-decoration: none; color: var(--ink);">
+                    <x-application-logo class="brand-mark" />
+                    NAVIR
+                    @if ($user->isAdmin())
+                        <span class="muted" style="font-weight: 400; letter-spacing: 0;">Admin</span>
+                    @endif
+                </a>
+                {{-- Phones: the menu below is folded away until this is tapped --}}
+                <button type="button" class="menu-btn side-toggle" aria-expanded="false" aria-controls="sidebar" aria-label="Open menu">
+                    <span aria-hidden="true">☰</span>
+                </button>
+            </div>
 
             @if ($user->isAdmin())
                 {{-- Search products (goes to the product table) --}}
@@ -127,5 +133,19 @@
             {{ $slot }}
         </main>
     </div>
+
+    <script>
+        // Phones: ☰ unfolds / folds the sidebar menu
+        (function () {
+            var sidebar = document.getElementById('sidebar');
+            var button = sidebar.querySelector('.side-toggle');
+            button.addEventListener('click', function () {
+                var open = sidebar.classList.toggle('open');
+                button.setAttribute('aria-expanded', open ? 'true' : 'false');
+                button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+                button.firstElementChild.textContent = open ? '✕' : '☰';
+            });
+        })();
+    </script>
 </body>
 </html>

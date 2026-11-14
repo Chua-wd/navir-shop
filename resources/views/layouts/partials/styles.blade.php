@@ -77,6 +77,23 @@
         .brand-mark { width: 18px; height: 18px; }
         .count { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 18px; margin-left: 6px;
                  padding: 0 5px; border: 1px solid var(--line); border-radius: 4px; font-size: 11px; }
+        .nav-account { display: flex; align-items: center; gap: 4px; }
+        .nav-group a, .nav-account a { white-space: nowrap; }
+
+        /* Phone menu: ☰ button + panel (only below 900px, see "Responsif") */
+        .menu-btn { display: none; align-items: center; justify-content: center; width: 38px; height: 34px; border: 0; border-radius: 7px;
+                    background: transparent; color: inherit; font-size: 18px; cursor: pointer; }
+        .menu-btn:hover { background: var(--bg); }
+        .mobile-menu { position: relative; z-index: 11; margin-top: 8px; }
+        .mobile-menu[hidden] { display: none; }
+        .mobile-menu-card { display: flex; flex-direction: column; padding: 8px; background: var(--surface); border-radius: var(--radius);
+                            box-shadow: 0 16px 40px rgba(11,27,43,.16); }
+        .mobile-menu-card a, .mobile-menu-card button { display: block; width: 100%; padding: 12px 14px; border: 0; border-radius: 8px;
+                            background: none; font: 15px var(--sans); text-align: left; text-decoration: none; color: var(--ink); cursor: pointer; }
+        .mobile-menu-card a:hover, .mobile-menu-card button:hover, .mobile-menu-card a.active { background: var(--bg); }
+        .mobile-menu-card a.active { font-weight: 600; }
+        .mobile-menu-card hr { width: 100%; margin: 6px 0; border: 0; border-top: 1px solid var(--line); }
+        .mobile-menu-card form { margin: 0; }
 
         /* ===== Panel gambar produk ===== */
         .visual { background: var(--panel); border-radius: var(--radius); overflow: hidden; aspect-ratio: 4 / 5; }
@@ -174,6 +191,9 @@
         body.dark-hero .site-header a { color: #e8f0f8; }
         body.dark-hero .site-header a:hover, body.dark-hero .site-header a.active { background: rgba(255,255,255,.1); }
         body.dark-hero .site-header .count { border-color: rgba(255,255,255,.35); }
+        body.dark-hero .site-header .menu-btn:hover { background: rgba(255,255,255,.1); }
+        body.dark-hero .mobile-menu-card a { color: var(--ink); }
+        body.dark-hero .mobile-menu-card a:hover, body.dark-hero .mobile-menu-card a.active { background: var(--bg); }
         body.dark-hero main { padding-top: 48px; }
 
         .hero { position: relative; min-height: max(100vh, 680px); overflow: hidden; color: #eaf2fa;
@@ -252,6 +272,7 @@
 
         /* ===== Admin layout with sidebar ===== */
         .admin { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; }
+        .side-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
         .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; gap: 18px;
                    padding: 20px 14px; background: var(--surface); border-right: 1px solid var(--line); }
         .side-search { display: flex; align-items: center; gap: 8px; padding: 0 12px; height: 38px; border-radius: 8px;
@@ -475,9 +496,13 @@
             .grid { grid-template-columns: repeat(2, 1fr); }
             .split { grid-template-columns: 1fr !important; }
             .nav-links { display: none !important; }
+            .nav-account { display: none; }
+            .menu-btn { display: inline-flex; }
             .promo { display: none; }
-            .admin { grid-template-columns: 1fr; }
+            .admin { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } /* header row stays compact, content takes the rest */
             .sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+            /* Phones: only the logo + ☰ until the menu is opened */
+            .sidebar:not(.open) > :not(.side-top) { display: none; }
             .side-user { margin-top: 0; }
             .admin-main { padding: 20px 16px 48px; }
             .kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -492,6 +517,13 @@
             .hero-wide { width: 100%; height: auto; min-height: 0; aspect-ratio: 3 / 2; }
             .hero-bottom .container { grid-template-columns: 1fr; }
             .glass span:not(:first-child) { display: none; }
+            .glass .glass-btn { min-width: 0; flex: 1; padding: 0 16px; }
+            /* Shop sort buttons + categories: one row each that you can swipe sideways */
+            .toolbar { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+            .toolbar > .side-search { flex: none; width: 100%; height: 40px; } /* search box inside a stacked toolbar (admin Orders) */
+            .tabs, .cat-links { min-width: 0; max-width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+            .tabs::-webkit-scrollbar, .cat-links::-webkit-scrollbar { display: none; }
+            .tabs a, .cat-links a { flex: none; white-space: nowrap; }
             .cart-item { grid-template-columns: 60px 1fr auto; gap: 10px 14px; }
             .cart-thumb { width: 60px; height: 60px; grid-row: span 2; }
             .cart-item .qty { grid-column: 2; }
