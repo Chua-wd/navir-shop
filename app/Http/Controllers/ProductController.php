@@ -18,6 +18,7 @@ class ProductController extends Controller
     // GET /products            : all products, 6 per page
     // GET /products?category=2 : only products in category 2
     // GET /products?page=2     : page 2
+    // GET /products?q=serum    : search (can be combined with category and sort)
     public function index(Request $request)
     {
         // Filter buttons: every category + its product count (uses the products() relation)
@@ -32,6 +33,19 @@ class ProductController extends Controller
             $query = Product::query();
         }
 
+        // Search: ?q=serum matches the product name, description or category name
+        $search = trim((string) $request->q);
+        if ($search !== '') {
+            // "%" and "_" typed by the user are plain characters, not wildcards ("10%" finds "Niacinamide 10%").
+            // "!" is the escape character: it works the same in MySQL and in SQLite (used by the tests).
+            $like = '%' . str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $search) . '%';
+            $query->where(function ($where) use ($like) {
+                $where->whereRaw("products.name LIKE ? ESCAPE '!'", [$like])
+                    ->orWhereRaw("products.description LIKE ? ESCAPE '!'", [$like])
+                    ->orWhereHas('category', fn ($category) => $category->whereRaw("categories.name LIKE ? ESCAPE '!'", [$like]));
+            });
+        }
+
         // Sort order: ?sort=new (default), ?sort=price_asc, ?sort=price_desc
         $sort = in_array($request->sort, ['price_asc', 'price_desc']) ? $request->sort : 'new';
         match ($sort) {
@@ -42,12 +56,12 @@ class ProductController extends Controller
 
         // with('category')  = load categories in one query instead of one per product
         // paginate()        = only fetch the 6 rows for the current page
-        // withQueryString() = page links keep ?category=...&sort=...
+        // withQueryString() = page links keep ?category=...&sort=...&q=...
         $products = $query->with('category')
             ->paginate(self::PER_PAGE)
             ->withQueryString();
 
-        return view('products.index', compact('products', 'categories', 'selectedCategory', 'sort'));
+        return view('products.index', compact('products', 'categories', 'selectedCategory', 'sort', 'search'));
     }
 
     // GET /products/{product} : product detail page

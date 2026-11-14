@@ -435,6 +435,10 @@
         .demo-box code { font: 13px ui-monospace, Consolas, monospace; padding: 1px 6px; border-radius: 4px; background: var(--surface); color: var(--navy); }
         .demo-box .btn { background: var(--surface); }
 
+        /* ===== Shop search ===== */
+        .shop-search { width: 280px; max-width: 100%; height: 38px; margin: 0; background: var(--surface); border: 1px solid var(--line); }
+        .shop-search:focus-within { border-color: var(--blue); }
+
         /* ===== Responsif ===== */
         @media (max-width: 900px) {
             .grid { grid-template-columns: repeat(2, 1fr); }
