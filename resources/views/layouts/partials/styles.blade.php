@@ -417,6 +417,10 @@
         .trash-btn:hover { border-color: #f0c8c4; background: #fdecea; color: #b42318; }
         .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
+        /* ===== Orders (admin) ===== */
+        .payment-message { margin: 0; padding: 14px 16px; border-radius: 10px; background: var(--bg); white-space: pre-wrap; word-break: break-word;
+                           font: 13px/1.6 ui-monospace, Consolas, monospace; color: var(--ink); }
+
         /* ===== Responsif ===== */
         @media (max-width: 900px) {
             .grid { grid-template-columns: repeat(2, 1fr); }

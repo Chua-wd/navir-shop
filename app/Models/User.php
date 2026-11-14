@@ -33,7 +33,7 @@ class User extends Authenticatable
     /**
      * Roles (users.role) and what each one can open:
      *   user         -> shop, cart, checkout, profile
-     *   admin        -> everything a user can + dashboard, products, product categories
+     *   admin        -> everything a user can + dashboard, orders, products, product categories
      *   system_admin -> everything an admin can + user management
      */
     public const ROLES = [

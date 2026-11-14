@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CartController;
@@ -45,6 +46,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::resource('products', AdminProductController::class)->except(['show', 'store']);
         Route::resource('categories', AdminCategoryController::class)->except(['show', 'store']);
+        // dashboard.orders.index / .show / .update (change status)
+        Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update'])
+            ->parameters(['orders' => 'checkout']); // the URL part is a Checkout (by its code)
     });
 
     // Save new product / category (POST). Kept outside the "dashboard." name prefix

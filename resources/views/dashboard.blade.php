@@ -198,7 +198,7 @@
     <section class="dash-card" style="margin-top: 16px;">
         <div class="card-head">
             <h2>Recent orders</h2>
-            <span class="muted" style="font-size: 12px;">Latest {{ $recentOrders->count() }}</span>
+            <a href="{{ route('dashboard.orders.index') }}" style="font-size: 12px;">All orders &rarr;</a>
         </div>
         <div class="table-wrap">
             <table class="table">
@@ -212,7 +212,14 @@
                     @foreach ($recentOrders as $order)
                         @php $initials = collect(explode(' ', $order->user?->name ?? '?'))->map(fn ($w) => mb_substr($w, 0, 1))->take(2)->implode(''); @endphp
                         <tr>
-                            <td class="num muted">#NV-{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
+                            <td class="num muted">
+                                {{-- Orders from the shop's checkout open their detail page; demo (seeded) orders have no checkout --}}
+                                @if ($order->checkout)
+                                    <a href="{{ route('dashboard.orders.show', $order->checkout) }}">{{ $order->checkout->code }}</a>
+                                @else
+                                    #NV-{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}
+                                @endif
+                            </td>
                             <td>
                                 <span style="display: inline-flex; align-items: center; gap: 8px;">
                                     <span class="avatar avatar-sm">{{ $initials }}</span>{{ $order->user?->name ?? 'Deleted user' }}

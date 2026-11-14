@@ -98,7 +98,7 @@ class DashboardController extends Controller
         $itemsPerOrder = $orderCount ? (clone $orders)->avg('quantity') : 0;
 
         // ===== Latest orders =====
-        $recentOrders = Order::with(['user', 'product'])->latest()->take(6)->get();
+        $recentOrders = Order::with(['user', 'product', 'checkout'])->latest()->take(6)->get();
 
         $lowStock = Product::where('stock', '<', 10)->count();
 

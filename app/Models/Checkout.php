@@ -38,6 +38,32 @@ class Checkout extends Model
     }
 
     /**
+     * Status of the whole order. It is stored on each product row (orders.status, which the
+     * dashboard charts use), and all rows of one checkout always change together.
+     */
+    public function status(): string
+    {
+        return $this->orders->first()?->status ?? 'pending';
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->orders()->update(['status' => $status]);
+        $this->unsetRelation('orders');
+    }
+
+    // Checkouts whose products have this status (for the filter tabs on the Orders page)
+    public function scopeWithStatus($query, string $status)
+    {
+        return $query->whereHas('orders', fn ($orders) => $orders->where('status', $status));
+    }
+
+    public function itemCount(): int
+    {
+        return (int) $this->orders->sum('quantity');
+    }
+
+    /**
      * Text that is pasted into the "Message" field of the payment form.
      */
     public function paymentMessage(): string

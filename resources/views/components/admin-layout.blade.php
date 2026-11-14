@@ -7,7 +7,7 @@
         </x-admin-layout>
     The menu follows the role (see User::ROLES):
         user         -> Profile + View shop
-        admin        -> + Dashboard, Products, Product Categories, shortcuts
+        admin        -> + Dashboard, Orders, Products, Product Categories, shortcuts
         system_admin -> + User Management
 --}}
 @php
@@ -17,6 +17,7 @@
         $productCount = \App\Models\Product::count();
         $categoryCount = \App\Models\ProductCategory::count();
         $lowStock = \App\Models\Product::where('stock', '<', 10)->count();
+        $pendingOrders = \App\Models\Checkout::withStatus('pending')->count();
     }
     $userCount = $user->isSystemAdmin() ? \App\Models\User::count() : null;
 @endphp
@@ -54,6 +55,10 @@
                 @if ($user->isAdmin())
                     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <x-icon name="grid" /> Dashboard
+                    </a>
+                    {{-- Badge = orders still waiting (status "pending") --}}
+                    <a href="{{ route('dashboard.orders.index') }}" class="{{ request()->routeIs('dashboard.orders.*') ? 'active' : '' }}">
+                        <x-icon name="bag" /> Orders @if ($pendingOrders)<span class="badge">{{ $pendingOrders }}</span>@endif
                     </a>
                     <a href="{{ route('dashboard.products.index') }}" class="{{ request()->routeIs('dashboard.products.*') ? 'active' : '' }}">
                         <x-icon name="box" /> Products <span class="badge">{{ $productCount }}</span>
