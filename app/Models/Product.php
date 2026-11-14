@@ -27,4 +27,15 @@ class Product extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    // Adds reviews_avg_rating and reviews_count to each product (for the stars on cards)
+    public function scopeWithRating($query)
+    {
+        return $query->withAvg('reviews', 'rating')->withCount('reviews');
+    }
 }

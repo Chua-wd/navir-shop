@@ -15,7 +15,7 @@ class PageController extends Controller
 
         $categories = ProductCategory::withCount('products')->orderBy('name')->get();
 
-        $products = Product::with('category')->latest('id')->take(3)->get();
+        $products = Product::with('category')->withRating()->latest('id')->take(3)->get();
 
         return view('pages.home', compact('featured', 'categories', 'products'));
     }

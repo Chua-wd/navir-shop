@@ -439,6 +439,26 @@
         .shop-search { width: 280px; max-width: 100%; height: 38px; margin: 0; background: var(--surface); border: 1px solid var(--line); }
         .shop-search:focus-within { border-color: var(--blue); }
 
+        /* ===== Ratings & reviews ===== */
+        /* Star rating component (components/stars.blade.php): grey stars with gold stars on top, cut to the rating width */
+        .stars { position: relative; display: inline-block; line-height: 1; letter-spacing: 1px; white-space: nowrap; vertical-align: middle; }
+        .stars-empty { color: var(--line); }
+        .stars-full { position: absolute; top: 0; left: 0; overflow: hidden; color: #c98a12; }
+        .card-rating { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 12px; color: var(--muted); }
+        .rating-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; color: var(--muted); text-decoration: none; }
+        .rating-link:hover { color: var(--ink); }
+        .rating-bar { display: grid; grid-template-columns: 34px 1fr 24px; gap: 8px; align-items: center; margin: 4px 0; font-size: 12px; }
+        .rating-bar .track > span { background: #c98a12; }
+        .review { padding: 18px 22px; border-bottom: 1px solid var(--line); }
+        .review:last-child { border-bottom: 0; }
+        /* Star picker: radios in reverse order, so "~" can light up the stars before the hovered one */
+        .star-input { display: inline-flex; flex-direction: row-reverse; gap: 2px; margin: 0; padding: 0; border: 0; }
+        .star-input input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+        .star-input label { font-size: 28px; line-height: 1; color: var(--line); cursor: pointer; }
+        .star-input label:hover, .star-input label:hover ~ label,
+        .star-input input:checked ~ label { color: #c98a12; }
+        .star-input input:focus-visible + label { outline: 2px solid var(--blue); border-radius: 4px; }
+
         /* ===== Responsif ===== */
         @media (max-width: 900px) {
             .grid { grid-template-columns: repeat(2, 1fr); }

@@ -46,11 +46,15 @@ class ProductController extends Controller
             });
         }
 
-        // Sort order: ?sort=new (default), ?sort=price_asc, ?sort=price_desc
-        $sort = in_array($request->sort, ['price_asc', 'price_desc']) ? $request->sort : 'new';
+        // Average stars + number of reviews for every product (shown on the cards)
+        $query->withRating();
+
+        // Sort order: ?sort=new (default), ?sort=price_asc, ?sort=price_desc, ?sort=top (best rated first)
+        $sort = in_array($request->sort, ['price_asc', 'price_desc', 'top']) ? $request->sort : 'new';
         match ($sort) {
             'price_asc'  => $query->orderBy('price'),
             'price_desc' => $query->orderByDesc('price'),
+            'top'        => $query->orderByDesc('reviews_avg_rating')->orderByDesc('reviews_count')->latest('id'),
             default      => $query->latest('id'),
         };
 
@@ -70,13 +74,22 @@ class ProductController extends Controller
         // Count this visit as a "product click" for the dashboard
         $product->clicks()->create(['user_id' => auth()->id()]);
 
-        $product->load('category');
+        $product->load('category')->loadAvg('reviews', 'rating')->loadCount('reviews');
 
         // "You may also like": other products in the same category (through the relation)
         $related = $product->category
-            ? $product->category->products()->with('category')->whereKeyNot($product->id)->take(3)->get()
+            ? $product->category->products()->with('category')->withRating()->whereKeyNot($product->id)->take(3)->get()
             : collect();
 
-        return view('products.show', compact('product', 'related'));
+        // Reviews, newest first. The logged-in customer's own review is shown in the form instead.
+        $user = auth()->user();
+        $reviews = $product->reviews()->with('user')->latest()->get();
+        $myReview = $user ? $reviews->firstWhere('user_id', $user->id) : null;
+        $canReview = $user && ($myReview || $user->hasBought($product));
+
+        // How many 5-star, 4-star, ... reviews (for the bars next to the average)
+        $breakdown = collect([5, 4, 3, 2, 1])->mapWithKeys(fn ($stars) => [$stars => $reviews->where('rating', $stars)->count()]);
+
+        return view('products.show', compact('product', 'related', 'reviews', 'myReview', 'canReview', 'breakdown'));
     }
 }

@@ -24,6 +24,20 @@ class User extends Authenticatable
         return $this->hasMany(Checkout::class);
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    // "Verified buyer": only people who ordered a product may review it (returned orders don't count)
+    public function hasBought(Product $product): bool
+    {
+        return Order::where('user_id', $this->id)
+            ->where('product_id', $product->id)
+            ->where('status', '!=', 'returned')
+            ->exists();
+    }
+
     /**
      * Get the attributes that should be cast.
      *

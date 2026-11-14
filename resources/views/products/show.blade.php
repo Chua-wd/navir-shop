@@ -52,6 +52,16 @@
             <p class="eyebrow">Navir · {{ $product->category?->name ?? 'Uncategorized' }}</p>
             <h1 class="display display-lg">{{ $title }}@if ($size)<br>{{ $size }}@endif</h1>
 
+            {{-- Rating summary: jumps to the reviews below --}}
+            <a href="#reviews" class="rating-link">
+                @if ($product->reviews_count)
+                    <x-stars :rating="$product->reviews_avg_rating" size="15" />
+                    <span>{{ number_format($product->reviews_avg_rating, 1) }} · {{ $product->reviews_count }} {{ Str::plural('review', $product->reviews_count) }}</span>
+                @else
+                    <span>No reviews yet</span>
+                @endif
+            </a>
+
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
                 <div class="chips">
                     @if ($size)
@@ -128,6 +138,120 @@
                     </details>
                 </div>
             @endif
+        </div>
+    </section>
+
+    {{-- ===== Reviews ===== --}}
+    <section id="reviews" class="reviews" style="margin-top: 56px;">
+        <h2 class="display display-lg" style="margin-bottom: 18px;">Reviews</h2>
+
+        @if (session('review_saved'))
+            <div class="alert">{{ session('review_saved') }}</div>
+        @endif
+        @if (session('demo_blocked'))
+            <div class="alert alert-error">{{ session('demo_blocked') }}</div>
+        @endif
+
+        <div class="split" style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 20px; align-items: start;">
+            <div>
+                {{-- Average + how the stars are spread --}}
+                <div class="pill" style="padding: 22px;">
+                    @if ($reviews->isNotEmpty())
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="display display-lg">{{ number_format($product->reviews_avg_rating, 1) }}</span>
+                            <div>
+                                <x-stars :rating="$product->reviews_avg_rating" size="18" />
+                                <div class="hint">{{ $reviews->count() }} {{ Str::plural('review', $reviews->count()) }}</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 14px;">
+                            @foreach ($breakdown as $stars => $count)
+                                <div class="rating-bar">
+                                    <span>{{ $stars }} ★</span>
+                                    <span class="track"><span style="width: {{ $reviews->count() ? round($count / $reviews->count() * 100) : 0 }}%;"></span></span>
+                                    <span class="hint">{{ $count }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="display display-md">No reviews yet.</div>
+                        <p class="muted" style="margin: 6px 0 0; font-size: 14px;">Bought it? Be the first to say how it works for you.</p>
+                    @endif
+                </div>
+
+                {{-- Write / edit your review --}}
+                <div class="pill" style="padding: 22px; margin-top: 16px;">
+                    @guest
+                        <p style="margin: 0; font-size: 14px;"><a href="{{ route('login') }}">Log in</a> to review a product you ordered.</p>
+                    @else
+                        @if ($canReview)
+                            <p class="eyebrow" style="margin: 0 0 10px;">( {{ $myReview ? 'your review' : 'write a review' }} )</p>
+                            <form method="POST" action="{{ route('reviews.store', $product) }}">
+                                @csrf
+                                <fieldset class="star-input">
+                                    <legend class="sr-only">Your rating</legend>
+                                    {{-- Shown right-to-left so hovering a star also lights up the ones before it --}}
+                                    @foreach ([5, 4, 3, 2, 1] as $stars)
+                                        <input type="radio" name="rating" id="rating-{{ $stars }}" value="{{ $stars }}" required
+                                               @checked((int) old('rating', $myReview?->rating) === $stars)>
+                                        <label for="rating-{{ $stars }}" title="{{ $stars }} {{ Str::plural('star', $stars) }}">★<span class="sr-only">{{ $stars }} {{ Str::plural('star', $stars) }}</span></label>
+                                    @endforeach
+                                </fieldset>
+                                @error('rating')
+                                    <p class="hint" style="color: #b42318; margin: 4px 0 0;">Please pick 1 to 5 stars.</p>
+                                @enderror
+                                <div class="field" style="margin: 12px 0;">
+                                    <label for="comment">Comment (optional)</label>
+                                    <textarea id="comment" name="comment" maxlength="1000" placeholder="How did it work for your skin?">{{ old('comment', $myReview?->comment) }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-sm">{{ $myReview ? 'Update review' : 'Post review' }}</button>
+                            </form>
+                        @else
+                            <p style="margin: 0; font-size: 14px;" class="muted">Only customers who ordered this product can review it.</p>
+                        @endif
+                    @endguest
+                </div>
+            </div>
+
+            {{-- The reviews --}}
+            <div class="pill">
+                @forelse ($reviews as $review)
+                    <article class="review">
+                        <div style="display: flex; justify-content: space-between; gap: 12px; align-items: start;">
+                            <div>
+                                <x-stars :rating="$review->rating" size="14" />
+                                <div style="font-weight: 600; margin-top: 4px;">
+                                    {{ $review->authorName() }}
+                                    <span class="tag">Verified buyer</span>
+                                    @if ((int) $review->user_id === auth()->id())
+                                        <span class="tag">you</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <span class="hint">{{ $review->created_at->format('M j, Y') }}</span>
+                        </div>
+                        @if ($review->comment)
+                            <p style="margin: 8px 0 0; font-size: 14px; white-space: pre-line;">{{ $review->comment }}</p>
+                        @endif
+
+                        {{-- Remove: your own review, or any review as an admin --}}
+                        @auth
+                            @if ((int) $review->user_id === auth()->id() || auth()->user()->isAdmin())
+                                <details class="confirm-delete" style="margin-top: 8px;">
+                                    <summary class="btn btn-ghost btn-sm">Remove</summary>
+                                    <form method="POST" action="{{ route('reviews.destroy', $review) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Yes, remove</button>
+                                    </form>
+                                </details>
+                            @endif
+                        @endauth
+                    </article>
+                @empty
+                    <p class="muted" style="margin: 0; padding: 22px;">Reviews from customers will appear here.</p>
+                @endforelse
+            </div>
         </div>
     </section>
 

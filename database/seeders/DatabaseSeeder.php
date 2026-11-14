@@ -29,11 +29,12 @@ class DatabaseSeeder extends Seeder
         }
 
         // Order matters: categories, then products (need category_id),
-        // then dashboard data (clicks & orders need products)
+        // then dashboard data (clicks & orders need products), then reviews (need orders)
         $this->call([
             CategorySeeder::class,
             ProductSeeder::class,
             DashboardSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }

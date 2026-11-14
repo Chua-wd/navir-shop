@@ -11,6 +11,7 @@ use App\Http\Controllers\MyOrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 // ===== Public pages =====
@@ -39,6 +40,11 @@ Route::middleware('auth')->group(function () {
     // My orders: the customer's own order history
     Route::get('/orders', [MyOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{checkout}', [MyOrderController::class, 'show'])->name('orders.show');
+
+    // Reviews: only customers who ordered the product can write one.
+    // Demo accounts may write (to try it) but not delete reviews.
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->middleware('demo.readonly')->name('reviews.destroy');
 });
 
 // ===== Dashboard (logged-in users only) =====

@@ -60,6 +60,7 @@
             <a href="{{ $sortLink('new') }}" class="{{ $sort === 'new' ? 'active' : '' }}">Newest</a>
             <a href="{{ $sortLink('price_asc') }}" class="{{ $sort === 'price_asc' ? 'active' : '' }}">Price: low to high</a>
             <a href="{{ $sortLink('price_desc') }}" class="{{ $sort === 'price_desc' ? 'active' : '' }}">Price: high to low</a>
+            <a href="{{ $sortLink('top') }}" class="{{ $sort === 'top' ? 'active' : '' }}">Top rated</a>
         </div>
         <div class="cat-links">
             <a href="{{ $catLink(null) }}" class="{{ $categoryId ? '' : 'active' }}">All</a>
