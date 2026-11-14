@@ -65,4 +65,10 @@ class User extends Authenticatable
     {
         return self::ROLES[$this->role] ?? ucfirst((string) $this->role);
     }
+
+    // Public demo account (config/shop.php 'demo'): may look around, can't change things
+    public function isDemo(): bool
+    {
+        return array_key_exists(strtolower((string) $this->email), config('shop.demo.accounts', []));
+    }
 }

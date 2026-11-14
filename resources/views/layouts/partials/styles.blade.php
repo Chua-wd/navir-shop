@@ -430,6 +430,11 @@
         .order-thumbs .visual { width: 44px; height: 44px; aspect-ratio: auto; border-radius: 8px; flex: none; }
         .order-row-end { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; font-variant-numeric: tabular-nums; }
 
+        /* ===== Demo accounts box (login page) ===== */
+        .demo-box { margin-top: 24px; padding: 16px 18px; border: 1px dashed var(--blue); border-radius: var(--radius); background: var(--blue-soft); }
+        .demo-box code { font: 13px ui-monospace, Consolas, monospace; padding: 1px 6px; border-radius: 4px; background: var(--surface); color: var(--navy); }
+        .demo-box .btn { background: var(--surface); }
+
         /* ===== Responsif ===== */
         @media (max-width: 900px) {
             .grid { grid-template-columns: repeat(2, 1fr); }

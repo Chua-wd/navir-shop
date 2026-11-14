@@ -114,6 +114,16 @@
                 <header style="margin-bottom: 18px;">{{ $header }}</header>
             @endisset
 
+            {{-- Shared demo account: tell them up front, and explain when a save was blocked --}}
+            @if (session('demo_blocked'))
+                <div class="alert alert-error">{{ session('demo_blocked') }}</div>
+            @elseif ($user->isDemo())
+                <div class="alert" style="display: flex; gap: 8px; align-items: center;">
+                    <x-icon name="info" />
+                    <span><b>Demo account.</b> Look around freely. Saving changes is turned off{{ $user->isAdmin() ? ', except updating an order\'s status' : '' }}.</span>
+                </div>
+            @endif
+
             {{ $slot }}
         </main>
     </div>

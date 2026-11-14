@@ -42,4 +42,32 @@
     <p class="auth-links" style="justify-content: center;">
         <span class="muted">Don't have an account? <a href="{{ route('register') }}" style="color: var(--ink);">Sign up</a></span>
     </p>
+
+    {{-- Public demo accounts (config/shop.php 'demo'): one click fills the form --}}
+    @if ($demo = config('shop.demo'))
+        <div class="demo-box">
+            <p class="eyebrow" style="margin: 0 0 4px;">( try the demo )</p>
+            <p class="muted" style="margin: 0 0 12px; font-size: 13px;">
+                Password for both: <code>{{ $demo['password'] }}</code>. Shared accounts, so saving changes is turned off.
+            </p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                @foreach ($demo['accounts'] as $email => $account)
+                    <button type="button" class="btn btn-ghost btn-sm demo-fill" data-email="{{ $email }}" data-password="{{ $demo['password'] }}">
+                        {{ $account['role'] === 'user' ? 'Shopper' : (\App\Models\User::ROLES[$account['role']] ?? $account['role']) }}
+                        <span class="hint" style="margin-left: 4px;">{{ $email }}</span>
+                    </button>
+                @endforeach
+            </div>
+        </div>
+        <script>
+            // Fill the login form with a demo account
+            document.querySelectorAll('.demo-fill').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    document.getElementById('email').value = button.dataset.email;
+                    document.getElementById('password').value = button.dataset.password;
+                    document.getElementById('password').focus();
+                });
+            });
+        </script>
+    @endif
 </x-guest-layout>

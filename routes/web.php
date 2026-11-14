@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // ===== Dashboard (logged-in users only) =====
-Route::middleware(['auth', 'verified', 'admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'admin', 'demo.readonly'])->group(function () {
     // Overview page: KPIs, charts and lists (?range=7|30|90)
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
@@ -64,12 +64,12 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
 // ===== User management (system admins only) =====
 // dashboard.users.index (list), .update (change role), .destroy (delete)
-Route::middleware(['auth', 'verified', 'system_admin'])->prefix('dashboard')->name('dashboard.')->group(function () {
+Route::middleware(['auth', 'verified', 'system_admin', 'demo.readonly'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::resource('users', AdminUserController::class)->only(['index', 'update', 'destroy']);
 });
 
-// Profile (Laravel Breeze)
-Route::middleware('auth')->group(function () {
+// Profile (Laravel Breeze). Demo accounts can view it but not change name, email or password
+Route::middleware(['auth', 'demo.readonly'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

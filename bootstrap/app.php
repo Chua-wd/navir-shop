@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,               // admin + system admin
             'system_admin' => \App\Http\Middleware\SystemAdminMiddleware::class, // system admin only
+            'demo.readonly' => \App\Http\Middleware\DemoReadOnly::class,         // demo accounts can't save changes
         ]);
 
         // Already logged in and opening /login or /register: admins go to the dashboard,

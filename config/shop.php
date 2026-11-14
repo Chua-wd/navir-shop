@@ -14,4 +14,15 @@ return [
         'holder' => 'PT Navir Indonesia',
     ],
 
+    // Public demo accounts for visitors and interviewers. Shown on the login page.
+    // They can look at everything, but changes are turned off (see DemoReadOnly middleware),
+    // except shopping and moving an order's status. Create them on the live site with this password.
+    'demo' => [
+        'password' => 'navir-demo-2026',
+        'accounts' => [
+            'demo.admin@navir.test' => ['name' => 'Demo Admin', 'role' => 'admin'],
+            'demo.user@navir.test' => ['name' => 'Demo User', 'role' => 'user'],
+        ],
+    ],
+
 ];
