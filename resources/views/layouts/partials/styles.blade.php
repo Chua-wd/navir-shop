@@ -471,6 +471,33 @@
                      font-size: 13px; text-decoration: none; }
         .back-link:hover { border-color: var(--navy); }
 
+        /* ===== Find my routine (skin quiz) ===== */
+        .routine-quiz { display: grid; gap: 14px; }
+        .routine-question { margin: 0; padding: 20px; border: 0; }
+        .routine-question legend { float: left; width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+                                   font-family: var(--serif); font-size: 22px; line-height: 1.2; }
+        .routine-n { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%;
+                     background: var(--navy); color: #fff; font: 600 13px var(--sans); }
+        .routine-options { clear: both; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+        .routine-option { position: relative; display: block; cursor: pointer; }
+        .routine-option input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+        .routine-option span { display: flex; align-items: center; min-height: 52px; height: 100%; padding: 12px 14px;
+                               border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; }
+        .routine-option:hover span { border-color: var(--navy); }
+        .routine-option input:checked + span { background: var(--navy); border-color: var(--navy); color: #fff; }
+        .routine-option input:focus-visible + span { outline: 2px solid var(--blue); outline-offset: 2px; }
+        .routine-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .routine-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 0; padding: 0; list-style: none; }
+        .routine-step { padding: 20px; }
+        .routine-step-head { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+        .routine-item { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: start; }
+        .routine-item + .routine-item { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+        .routine-item .visual { width: 72px; height: 90px; aspect-ratio: auto; border-radius: 8px; }
+        .routine-item-name { font-family: var(--serif); font-size: 19px; line-height: 1.15; color: var(--ink); text-decoration: none; }
+        .routine-item form { margin: 0; }
+        .routine-buy { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 16px; padding: 20px; }
+        .routine-extras { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
         /* ===== Ratings & reviews ===== */
         /* Star rating component (components/stars.blade.php): grey stars with gold stars on top, cut to the rating width */
         .stars { position: relative; display: inline-block; line-height: 1; letter-spacing: 1px; white-space: nowrap; vertical-align: middle; }
@@ -531,6 +558,8 @@
             .cart-item .remove { grid-column: 3; grid-row: 1; justify-self: end; }
             .order-row { grid-template-columns: 1fr auto; }
             .order-thumbs { grid-column: 1 / -1; }
+            .routine-steps { grid-template-columns: 1fr; }
+            .routine-buy .btn { width: 100%; }
         }
         @media (max-width: 560px) {
             .grid { grid-template-columns: 1fr; }

@@ -4,6 +4,7 @@
         <span>&copy; {{ date('Y') }} Navir Men's Skincare · Built with Laravel</span>
         <nav>
             <a href="{{ url('/products') }}">Shop</a>
+            <a href="{{ route('routine.show') }}">Find my routine</a>
             <a href="{{ url('/about') }}">About</a>
             <a href="{{ url('/contact') }}">Contact</a>
         </nav>

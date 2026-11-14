@@ -12,6 +12,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RoutineController;
 use Illuminate\Support\Facades\Route;
 
 // ===== Public pages =====
@@ -21,6 +22,10 @@ Route::get('/contact', [PageController::class, 'contact']);
 
 // Shop: anyone can browse the product list and product pages
 Route::resource('products', ProductController::class)->only(['index', 'show']);
+
+// "Find my routine" skin quiz: 4 questions -> a 3-step routine from our products (no login needed)
+Route::get('/routine', [RoutineController::class, 'show'])->name('routine.show');
+Route::post('/routine/cart', [RoutineController::class, 'addToCart'])->name('routine.cart');
 
 // Cart: anyone can use it, no login needed (kept in the session)
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

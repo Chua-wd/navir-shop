@@ -15,6 +15,9 @@
         <x-checkout-steps :current="1" />
         <h1 class="display display-lg" style="margin-bottom: 20px;">Your cart</h1>
 
+        @if (session('success'))
+            <div class="alert">{{ session('success') }}</div>
+        @endif
         @error('cart')
             <div class="alert alert-error">{{ $message }}</div>
         @enderror

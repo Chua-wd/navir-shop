@@ -20,6 +20,7 @@
         ];
     $pageLinks = [
         ['url' => url('/products'), 'label' => 'Shop', 'active' => request()->is('products*')],
+        ['url' => route('routine.show'), 'label' => 'Find my routine', 'active' => request()->is('routine*')],
         ['url' => url('/about'), 'label' => 'About', 'active' => request()->is('about')],
         ['url' => url('/contact'), 'label' => 'Contact', 'active' => request()->is('contact')],
     ];
