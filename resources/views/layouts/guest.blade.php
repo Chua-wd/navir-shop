@@ -1,11 +1,8 @@
 {{--
     Layout for Breeze guest pages (log in, sign up, forgot password, ...).
     Used via <x-guest-layout> ... </x-guest-layout>.
-    Left: navy panel in the style of the home hero. Right: the form.
+    Left: navy panel in the style of the home hero, with the serum photo. Right: the form.
 --}}
-@php
-    $featured = \App\Models\Product::where('name', 'like', '%Serum%')->first();
-@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,11 +21,9 @@
                 NAVIR
             </a>
 
-            @if ($featured)
-                <div style="position: absolute; inset: 12% 18% 30%; opacity: .9;">
-                    <x-product-visual :product="$featured" tone="dark" />
-                </div>
-            @endif
+            {{-- Serum photo with a transparent background (public/images/login-sign-up.webp) --}}
+            <img src="{{ asset('images/login-sign-up.webp') }}" width="1024" height="1536" class="auth-photo" fetchpriority="high"
+                 alt="NAVIR Niacinamide 10% Serum bottle with water drops">
 
             <div style="position: relative;">
                 <h1 class="display">A men's routine,<br>made simple.</h1>

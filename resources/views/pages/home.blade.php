@@ -13,11 +13,11 @@
             <rect width="100%" height="100%" filter="url(#grain)"/>
         </svg>
 
-        {{-- Hero photo (Niacinamide 10% Serum). Source: public/uploads/products/demo/landing page.png,
-             converted to WebP. First thing on screen, so it loads right away (no lazy loading). --}}
-        <div class="hero-product">
-            <img src="{{ asset('images/landing-hero.webp') }}" width="1024" height="1536" fetchpriority="high"
-                 alt="NAVIR Niacinamide 10% Serum dropper bottle surrounded by water drops">
+        {{-- Hero photo: the NAVIR range in a water splash. Source: public/images/landing-page.png, converted
+             to WebP (transparent edges, so it blends into the navy). First thing on screen: no lazy loading. --}}
+        <div class="hero-product hero-wide">
+            <img src="{{ asset('images/landing-page.webp') }}" width="1536" height="1024" fetchpriority="high"
+                 alt="The NAVIR range: serum, toner, body wash, sunscreen, beard oil, shaving foam and deodorant in a water splash">
         </div>
 
         @if ($featured)

@@ -187,6 +187,9 @@
                             -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
                                     mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); }
         .hero-product svg { width: 100%; height: 100%; }
+        /* Wide (landscape) hero photo with its own transparent edges: no extra fade needed */
+        .hero-wide { top: 7vh; width: min(1080px, 92vw); height: 64vh; }
+        .hero-wide img { -webkit-mask-image: none; mask-image: none; }
         .hero-title { position: relative; text-align: center; margin: 0 16px 22px;
                       font-family: var(--serif); font-weight: 400; line-height: .95; letter-spacing: -.02em;
                       font-size: clamp(46px, 8.4vw, 128px); text-shadow: 0 8px 40px rgba(5,18,32,.55); }
@@ -221,6 +224,8 @@
                      padding: 28px 36px; color: #eaf2fa;
                      background: radial-gradient(ellipse 80% 70% at 50% 40%, #2f6189 0%, #173a5a 50%, #0b1f33 100%); }
         .auth-side a { color: inherit; text-decoration: none; }
+        .auth-photo { position: absolute; left: 50%; top: 8%; transform: translateX(-50%); width: auto; height: 62%;
+                      max-width: 80%; object-fit: contain; filter: drop-shadow(0 24px 40px rgba(4,15,28,.45)); pointer-events: none; }
         .auth-side .display { font-size: clamp(40px, 4.6vw, 68px); text-shadow: 0 8px 40px rgba(5,18,32,.5); }
         .auth-side ul { list-style: none; padding: 0; margin: 20px 0 0; display: flex; gap: 8px; flex-wrap: wrap; }
         .auth-side li { padding: 6px 12px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; font-size: 12px;
@@ -473,10 +478,12 @@
             .kpi { border-bottom: 1px solid var(--line); }
             .dash-row { grid-template-columns: 1fr !important; }
             .auth { grid-template-columns: 1fr; }
-            .auth-side { min-height: 240px; }
+            .auth-side { min-height: 460px; }
+            .auth-photo { top: 9%; height: 50%; }
             .hero { justify-content: flex-start; padding-top: 84px; min-height: 0; }
             .hero-product { position: relative; left: auto; top: auto; transform: none; margin: 0 auto;
                             width: 80vw; height: min(52vh, 420px); min-height: 260px; }
+            .hero-wide { width: 100%; height: auto; min-height: 0; aspect-ratio: 3 / 2; }
             .hero-bottom .container { grid-template-columns: 1fr; }
             .glass span:not(:first-child) { display: none; }
             .cart-item { grid-template-columns: 60px 1fr auto; gap: 10px 14px; }
