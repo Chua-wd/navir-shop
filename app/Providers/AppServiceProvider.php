@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,12 @@ class AppServiceProvider extends ServiceProvider
         // Tampilan link pagination memakai markup sederhana (<ul class="pagination">),
         // bukan versi Tailwind bawaan, karena proyek ini tidak memakai Tailwind.
         Paginator::useBootstrapFour();
+
+        // Live site on HTTPS (APP_URL=https://... in .env): build every link, form and image URL
+        // with https, so the browser never sees "Not secure" / mixed content. Local http stays http.
+        if (str_starts_with((string) config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
 
         // Locally the project sits in a folder called "[Eduwork]". PHP's glob() reads "[...]" as a
         // pattern, so Laravel finds no migration files (migrate and the tests see an empty database).
